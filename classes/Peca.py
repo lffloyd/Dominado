@@ -3,5 +3,4 @@ class Peca():
         self.nEsq = nEsq
         self.nDir = nDir
 
-    def __str__(self):
-        return "(" + str(self.nEsq) +"|"+ str(self.nDir) + ")"
+    def __str__(self): return "(" + str(self.nEsq) +"|"+ str(self.nDir) + ")"

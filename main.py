@@ -1,21 +1,20 @@
-import random
-from classes import Peca as pec
+from classes.Peca import *
+from classes.Jogador import *
+from classes.Mesa import *
 
-def gerarPecas():
-    pecas = []*28
+def comecarJogo(mesa, jogador1, jogador2):
+    listaPecas = mesa.gerarPecas()
     for i in range(0,7):
-        for j in range(i,7):
-                pecas.append(pec.Peca(i,j))
-    return pecas
+        jogador1.addPeca(mesa.comprarPeca(listaPecas))
+        jogador2.addPeca(mesa.comprarPeca(listaPecas))
+    return listaPecas
 
-def comprarPeca(listaPecas):
-    pos = random.randint(0, len(listaPecas))
-    peca = listaPecas[pos]
-    del listaPecas[pos]
-    return peca
+mesa = Mesa()
+jogador1 = Jogador()
+jogador2 = Jogador()
+listaPecas = comecarJogo(mesa, jogador1, jogador2)
 
-listaPecas = gerarPecas()
 
-print(comprarPeca(listaPecas),"\n\n\n")
-
+print(jogador1)
+print(jogador2)
 for i in listaPecas: print(i)

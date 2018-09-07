@@ -18,9 +18,11 @@ class Mesa():
         del listaPecas[pos]
         return peca
 
-    def comecarJogo(self, jogador1, jogador2):
+    def comecarJogo(self):
         listaPecas = self.gerarPecas()
+        jogador1 = Jogador()
+        jogador2 = Jogador()
         for i in range(0, 7):
             jogador1.addPeca(self.comprarPeca(listaPecas))
             jogador2.addPeca(self.comprarPeca(listaPecas))
-        return listaPecas
+        return listaPecas,jogador1,jogador2

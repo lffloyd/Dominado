@@ -1,5 +1,6 @@
 class Jogador:
-    def __init__(self):
+    def __init__(self, ind=None):
+        self.__ind = ind
         self.mao = []
         self.pontos = None
         self.vezAtual = False
@@ -19,3 +20,5 @@ class Jogador:
     def ehSuaVez(self): return self.vezAtual
 
     def setaVez(self, seuTurno): self.vezAtual = seuTurno
+
+    def pegaIndice(self): return self.__ind

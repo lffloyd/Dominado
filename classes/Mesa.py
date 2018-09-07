@@ -1,4 +1,5 @@
 from classes import Peca as pec
+from classes.Jogador import *
 import random
 
 class Mesa():

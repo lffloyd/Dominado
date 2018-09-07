@@ -7,4 +7,3 @@ listaPecas, jogador1, jogador2 = mesa.comecarJogo()
 
 print(jogador1)
 print(jogador2)
-for i in listaPecas: print(i)

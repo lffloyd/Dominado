@@ -2,12 +2,20 @@ class Jogador:
     def __init__(self):
         self.mao = []
         self.pontos = None
+        self.vezAtual = False
 
     def __str__(self):
         resp = "Mão: "
-        for i in self.mao:
-            resp += str(i)
+        for peca in self.mao: resp += str(peca)
+        resp += "\tVez atual: "
+        resp += ("Sim" if(self.vezAtual) else "Não")
         return resp
 
-    def addPeca(self, peca):
+    def adicionaPeca(self, peca):
         self.mao.append(peca)
+
+    def pecas(self): return self.mao
+
+    def ehSuaVez(self): return self.vezAtual
+
+    def setaVez(self, seuTurno): self.vezAtual = seuTurno

@@ -5,7 +5,7 @@ class Mesa():
     def __init__(self): return
 
     def gerarPecas(self):
-        pecas = [] * 28
+        pecas = []
         for i in range(0, 7):
             for j in range(i, 7):
                 pecas.append(pec.Peca(i, j))

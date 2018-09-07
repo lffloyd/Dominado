@@ -3,9 +3,7 @@ from classes.Jogador import *
 from classes.Mesa import *
 
 mesa = Mesa()
-jogador1 = Jogador()
-jogador2 = Jogador()
-listaPecas = mesa.comecarJogo(jogador1, jogador2)
+listaPecas, jogador1, jogador2 = mesa.comecarJogo()
 
 print(jogador1)
 print(jogador2)

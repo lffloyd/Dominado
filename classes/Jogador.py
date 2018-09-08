@@ -102,3 +102,6 @@ class Jogador():
                 self.__maoJogaveis = []
             self.setaVez(False)
             oponente.setaVez(True)
+            if (len(self.__mao) == 0):
+                self.__ganhou = True
+                return

@@ -7,6 +7,8 @@ class Mesa():
         self.__pecasAComprar = []
         self.__tabuleiro = []
 
+        #self.__
+
     def __str__(self):
         resp = "Mesa: "
         for peca in self.__pecasAComprar: resp += str(peca)
@@ -25,10 +27,11 @@ class Mesa():
         peca = self.__pecasAComprar.pop(pos)
         return peca
 
-    def comecarJogo(self):
+    def comecarJogo(self, jogador1, jogador2):
+        self.__pecasAComprar = []
         self.__pecasAComprar = self.gerarPecas()
-        jogador1 = Jogador(1)
-        jogador2 = Jogador(2)
+        jogador1.limparMao()
+        jogador2.limparMao()
         for i in range(0, 7):
             jogador1.adicionaPeca(self.comprarPeca())
             jogador2.adicionaPeca(self.comprarPeca())
@@ -40,7 +43,7 @@ class Mesa():
             jogador1.setaVez(True) if ((somar1 == False) and (somar2 == True)) else jogador2.setaVez(True)
         print("Maior peça de jog. 1: " + str(maior1) + "\tSomar? " + str(somar1))
         print("Maior peça de jog. 2: " + str(maior2) + "\tSomar? " + str(somar2))
-        return self.__pecasAComprar, jogador1, jogador2
+        return self.__pecasAComprar
 
     def procuraMaiorPeca(self, jogador):
         maior = None

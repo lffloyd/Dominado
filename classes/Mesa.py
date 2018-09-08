@@ -8,12 +8,11 @@ class Mesa():
         self.__tabuleiro = []
 
     def __str__(self):
-        resp = None
         resp = "Mesa: "
-        for peca in self.__pecasAComprar: resp += peca
-        resp = "\nTabuleiro: "
-        for peca in self.__tabuleiro: resp += peca
-        print(resp)
+        for peca in self.__pecasAComprar: resp += str(peca)
+        resp += "\nTabuleiro: "
+        for peca in self.__tabuleiro: resp += str(peca)
+        return resp
 
     def gerarPecas(self):
         pecas = [] * 28
@@ -22,10 +21,9 @@ class Mesa():
                 pecas.append(Peca(i, j))
         return pecas
 
-    def comprarPeca(self, listaPecas):
-        pos = random.randint(0, len(listaPecas)-1)
-        peca = listaPecas[pos]
-        del listaPecas[pos]
+    def comprarPeca(self):
+        pos = random.randint(0, len(self.__pecasAComprar)-1)
+        peca = self.__pecasAComprar.pop(pos)
         return peca
 
     def comecarJogo(self):
@@ -33,8 +31,8 @@ class Mesa():
         jogador1 = Jogador(1)
         jogador2 = Jogador(2)
         for i in range(0, 7):
-            jogador1.adicionaPeca(self.comprarPeca(self.__pecasAComprar))
-            jogador2.adicionaPeca(self.comprarPeca(self.__pecasAComprar))
+            jogador1.adicionaPeca(self.comprarPeca())
+            jogador2.adicionaPeca(self.comprarPeca())
         maior1, somar1 = self.procuraMaiorPeca(jogador1)
         maior2, somar2 = self.procuraMaiorPeca(jogador2)
         if ((somar1 == True) and (somar2 == True)) or ((somar1 == False) and (somar2 == False)):
@@ -58,3 +56,34 @@ class Mesa():
             for i in range(1, len(jogador.pecas())):
                 if ((jogador.pecas()[i]).somatorio() > maior.somatorio()): maior = jogador.pecas()[i]
         return maior, somar
+
+    def pegaPecasAComprar(self): return self.__pecasAComprar
+
+    def pegaTabuleiro(self): return self.__tabuleiro
+
+    def extremos(self):
+        return self.__tabuleiro[0].esq(), self.__tabuleiro[len(self.__tabuleiro) - 1].dir()
+
+    def adicionarNaMesa(self, peca, pos):
+        esq, dir = self.extremos()
+        esqIgual = False
+        dirIgual = False
+        adicionou = False
+        if (pos == 0):
+            if (esq == peca.esq()): esqIgual = True
+            if (esq == peca.dir()): dirIgual = True
+            if ((not esqIgual) and (not dirIgual)): return False
+            else:
+                if ((dirIgual and not esqIgual) or (dirIgual and esqIgual)): self.__tabuleiro.insert(0, peca)
+                if (esqIgual and not dirIgual): peca = peca.viraPeca()
+                self.__tabuleiro.insert(0, peca)
+                return True
+        if (pos == 1):
+            if (dir == peca.esq()): esqIgual = True
+            if (dir == peca.dir()): dirIgual = True
+            if ((not esqIgual) and (not dirIgual)): return False
+            else:
+                if ((esqIgual and not dirIgual) or (dirIgual and esqIgual)): self.__tabuleiro.insert(0, peca)
+                if (dirIgual and not esqIgual): peca = peca.viraPeca()
+                self.__tabuleiro.append(peca)
+                return True

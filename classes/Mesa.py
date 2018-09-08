@@ -3,21 +3,21 @@ from classes.Jogador import *
 import random
 
 class Mesa():
-    def __init__(self):
+    def __init__(self, totalPecas=None):
         self.__pecasAComprar = []
         self.__tabuleiro = []
-
-        #self.__
+        self.totalPecas = totalPecas
 
     def __str__(self):
         resp = "Mesa: "
         for peca in self.__pecasAComprar: resp += str(peca)
-        resp += "\nTabuleiro: "
+        resp += " (" + str(len(self.__pecasAComprar)) + " peça(s))" + "\nTabuleiro: "
         for peca in self.__tabuleiro: resp += str(peca)
+        resp += " (" + str(len(self.__tabuleiro)) + " peça(s))"
         return resp
 
     def gerarPecas(self):
-        pecas = [] * 28
+        pecas = [] * self.totalPecas
         for i in range(0, 7):
             for j in range(i, 7): pecas.append(Peca(i, j))
         return pecas
@@ -43,7 +43,7 @@ class Mesa():
             jogador1.setaVez(True) if ((somar1 == False) and (somar2 == True)) else jogador2.setaVez(True)
         print("Maior peça de jog. 1: " + str(maior1) + "\tSomar? " + str(somar1))
         print("Maior peça de jog. 2: " + str(maior2) + "\tSomar? " + str(somar2))
-        return self.__pecasAComprar
+        return
 
     def procuraMaiorPeca(self, jogador):
         maior = None
@@ -64,9 +64,6 @@ class Mesa():
     def pegaTabuleiro(self): return self.__tabuleiro
 
     def extremos(self):
-        resp = "TABULEIRO --> "
-        for peca in self.__tabuleiro: resp += str(peca)
-        print(resp)
         return self.__tabuleiro[0].esq(), self.__tabuleiro[len(self.__tabuleiro)-1].dir()
 
     def adicionarNaMesa(self, peca, pos):

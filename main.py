@@ -3,10 +3,10 @@ from classes.Jogador import *
 from classes.Mesa import *
 from classes.Color import *
 
-mesa = Mesa()
+mesa = Mesa(28)
 jogador1 = Jogador(1)
 jogador2 = Jogador(2)
-listaPecas = mesa.comecarJogo(jogador1, jogador2)
+mesa.comecarJogo(jogador1, jogador2)
 
 while ((not jogador1.jaGanhou()) and (not jogador2.jaGanhou())):
     jogador1.jogar(mesa, jogador2)

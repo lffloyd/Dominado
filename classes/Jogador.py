@@ -1,35 +1,35 @@
 from classes.Color import *
 
-class Jogador():
+class Jogador:
     def __init__(self, ind=None):
         self.__ind = ind
-        self.__mao = []
-        self.__pontos = None
-        self.__vezAtual = False
+        self.mao = []
+        self.maoJogaveis = []
+        self.pontos = None
+        self.vezAtual = False
 
     def __str__(self):
-        resp = "Jogador " + str(self.__ind) + " -"
-        resp += "\tMão: "
-        for peca in self.__mao: resp += str(peca)
+        resp = "Mão: "
+        for peca in self.mao: resp += str(peca)
         resp += "\tVez atual: "
-        resp += ("Sim" if(self.__vezAtual) else "Não")
+        resp += ("Sim" if(self.vezAtual) else "Não")
         return resp
 
     def adicionaPeca(self, peca):
-        self.__mao.append(peca)
+        self.mao.append(peca)
 
-    def pecas(self): return self.__mao
+    def pecas(self): return self.mao
 
-    def ehSuaVez(self): return self.__vezAtual
+    def ehSuaVez(self): return self.vezAtual
 
-    def setaVez(self, seuTurno): self.__vezAtual = seuTurno
+    def setaVez(self, seuTurno): self.vezAtual = seuTurno
 
     def pegaIndice(self): return self.__ind
 
 
-    # TESTEEEE
+# TESTEEEE
     def pecasJogaveis(self, mesa, mao):
-        resp = ""
+        resp = "                "
         if len(mesa.pegaTabuleiro()) == 0:
             for peca in mao:
                 maiorPeca, nada = mesa.procuraMaiorPeca(self)
@@ -37,24 +37,34 @@ class Jogador():
                     aux = mao.index(peca)
             for peca in mao:
                 if mao.index(peca) == aux:
-                    resp += " " + Color.BLUE + Color.UNDERLINE + str(mao.index(peca) + 1) + Color.END
+                    resp += Color.BLUE + Color.UNDERLINE + str(mao.index(peca)+1) + Color.END + "    "
+                    self.maoJogaveis.append(peca)
                 else:
-                    resp += " " + str(mao.index(peca) + 1)
+                    resp += str(mao.index(peca)+1) + "    "
         else:
             extremoEsq, extremoDir = mesa.extremos()
             for peca in mao:
-                if ((peca.nEsq == extremoEsq or (peca.nEsq == extremoDir) or (peca.nDir == extremoEsq) or (
-                    peca.nDir == extremoDir))):
-                    resp += " " + Color.BLUE + Color.UNDERLINE + str(mao.index(peca) + 1) + Color.END
+                if ((peca.nEsq == extremoEsq or (peca.nEsq == extremoDir) or (peca.nDir == extremoEsq) or (peca.nDir == extremoDir))):
+                    resp += Color.BLUE + Color.UNDERLINE + str(mao.index(peca)+1) + Color.END + "    "
+                    self.maoJogaveis.append(peca)
                 else:
-                    resp += " " + str(mao.index(peca) + 1)
+                    resp += str(mao.index(peca)+1) + "    "
         return resp
 
     def jogar(self, mesa):
-        if self.__vezAtual == False: return
+        if self.vezAtual == False: return
         else:
-            print(self)
-            print(self.pecasJogaveis(mesa, self.__mao))
-            #escolhida = input("Qual peça deseja jogar?")
-            #mesa.adicionarNaMesa(self.mao[escolhida-1], pos)
-            #del self.mao[escolhida-1]
+            print("\n" + self.pecasJogaveis(mesa, self.mao))
+            print("Jogador "+str(self.__ind),self)
+            print("\n" + str(mesa))
+            while (len(self.maoJogaveis) == 0):
+                self.adicionaPeca(mesa.comprarPeca())
+                self.maoJogaveis = []
+                print("\n" + self.pecasJogaveis(mesa, self.mao))
+                print("Jogador " + str(self.__ind), self)
+
+            escolhida = int(input("Qual peça deseja jogar?"))
+            if (len(mesa.pegaTabuleiro())) != 0: pos = int(input("Em que posição?"))
+            else: pos = 0
+            mesa.adicionarNaMesa(self.mao[escolhida-1], pos)
+            del self.mao[escolhida-1]

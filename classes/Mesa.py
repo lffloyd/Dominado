@@ -61,8 +61,9 @@ class Mesa():
     def pegaTabuleiro(self): return self.__tabuleiro
 
     def extremos(self):
-        #if (len(self.__tabuleiro) == 0): return -1, -1
-        for peca in self.__tabuleiro: print(peca)
+        resp = "TABULEIRO --> "
+        for peca in self.__tabuleiro: resp += str(peca)
+        print(resp)
         return self.__tabuleiro[0].esq(), self.__tabuleiro[len(self.__tabuleiro)-1].dir()
 
     def adicionarNaMesa(self, peca, pos):
@@ -78,7 +79,7 @@ class Mesa():
                 if (esq == peca.dir()): dirIgual = True
                 if ((not esqIgual) and (not dirIgual)): return False
                 else:
-                    if (esqIgual and not dirIgual): peca = peca.viraPeca()
+                    if (esqIgual and not dirIgual): peca.viraPeca()
                     self.__tabuleiro.insert(0, peca)
                     return True
             if (pos == 1):
@@ -86,6 +87,6 @@ class Mesa():
                 if (dir == peca.dir()): dirIgual = True
                 if ((not esqIgual) and (not dirIgual)): return False
                 else:
-                    if (dirIgual and not esqIgual): peca = peca.viraPeca()
+                    if (dirIgual and not esqIgual): peca.viraPeca()
                     self.__tabuleiro.append(peca)
                     return True

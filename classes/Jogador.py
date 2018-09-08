@@ -64,5 +64,7 @@ class Jogador():
             escolhida = int(input("Qual peça deseja jogar? "))
             if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição? "))
             else: pos = 0
-            mesa.adicionarNaMesa(self.__mao[escolhida-1], pos)
-            del self.__mao[escolhida-1]
+            peca = self.__mao.pop(escolhida-1)
+            adicionou = mesa.adicionarNaMesa(peca, pos)
+            if (not adicionou): self.__mao.append(peca)
+            self.__maoJogaveis = []

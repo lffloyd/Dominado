@@ -9,7 +9,6 @@ listaPecas, jogador1, jogador2 = mesa.comecarJogo()
 print(jogador1)
 print(jogador2)
 
-
 while(True):
     jogador1.jogar(mesa)
     jogador2.jogar(mesa)

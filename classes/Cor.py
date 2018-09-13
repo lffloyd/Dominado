@@ -1,4 +1,9 @@
-class Color():
+#Define atalhos para atribuição de cores. Classe usada para auxiliar na visualização do jogo (i. e. verificar
+#que peças são jogáveis/encaixáveis num dado momento).
+
+#Escrito por: Vítor Costa
+
+class Cor():
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
    DARKCYAN = '\033[36m'

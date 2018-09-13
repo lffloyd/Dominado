@@ -1,6 +1,12 @@
-from classes.Color import *
+#Define a classe Jogador e seus atributos associados.
+
+#Escrito por: Vítor Costa, Luiz Felipe
+
+from classes.Cor import *
 
 class Jogador():
+    #Construtor define atributos como a "mão" do jogador (i.e. suas peças), as peças jogáveis num dado momento (i.e. aque-
+    #las que ele pode efetivamente encaixar no tabuleiro), qtd. de pontos acumulada e outros parãmetros de controle.
     def __init__(self, ind=None):
         self.__ind = ind
         self.__mao = []
@@ -19,21 +25,32 @@ class Jogador():
         resp += ("Sim" if(self.__vezAtual) else "Não")
         return resp
 
+    #Adiciona uma peça à mão do jogador.
     def adicionaPeca(self, peca):
         self.__mao.append(peca)
 
+    #Retorna as peças do jogador.
     def pecas(self): return self.__mao
 
+    #Usada para indicar se o jogador está ativo no momento corrente.
     def ehSuaVez(self): return self.__vezAtual
 
+    #Modifica o estado de atividade do jogador.
     def setaVez(self, seuTurno): self.__vezAtual = seuTurno
 
+    #Retorna o índice do jogador. O índice é um número usado para distinguir os diferentes jogadores.
     def pegaIndice(self): return self.__ind
 
+    #Modifica o estado da última tentativa de jogada realizada pelo jogador (i.e. ele pode ter conseguido jogar ou não).
     def setaJogou(self, jogou): self.__jogouDaUltimaVez = jogou
 
+    #Retorna se o jogador participou efetivamente da última rodada do jogo (usado para verificar se o jogador está "travado",
+    #ou seja, se não pode mais jogar por não ter peças para encaixar nem peças para comprar).
     def jogouRodada(self): return self.__jogouDaUltimaVez
 
+    # Indica as peças que o jogador pode encaixar num dado momento no tabuleiro, avaliando se esta é a primeira jogada do jogo
+    # ou se ele precisa encaixar uma peça numa das duas pontas da mesa. Para indicar quais peças o jogador pode encaixar,
+    # cores são utilizadas.
     def pecasJogaveis(self, mesa, mao):
         resp = "                    "
         if len(mesa.pegaTabuleiro()) == 0:
@@ -43,7 +60,7 @@ class Jogador():
                     aux = mao.index(peca)
             for peca in mao:
                 if mao.index(peca) == aux:
-                    resp += Color.BLUE + Color.UNDERLINE + str(mao.index(peca)+1) + Color.END + "    "
+                    resp += Cor.BLUE + Cor.UNDERLINE + str(mao.index(peca)+1) + Cor.END + "    "
                     self.__maoJogaveis.append(peca)
                 else:
                     resp += str(mao.index(peca)+1) + "    "
@@ -52,27 +69,35 @@ class Jogador():
             for peca in mao:
                 if ((peca.esq() == extremoEsq or (peca.esq() == extremoDir) or
                          (peca.dir() == extremoEsq) or (peca.dir() == extremoDir))):
-                    resp += Color.BLUE + Color.UNDERLINE + str(mao.index(peca)+1) + Color.END + "    "
+                    resp += Cor.BLUE + Cor.UNDERLINE + str(mao.index(peca)+1) + Cor.END + "    "
                     self.__maoJogaveis.append(peca)
                 else:
                     resp += str(mao.index(peca)+1) + "    "
         return resp
 
+    #Elimina todas as cartas de um jogador.
     def limparMao(self):
         self.__mao = []
         self.__maoJogaveis = []
 
+    #Verifica se um jogador ganhou, ou seja, se a variável de controle do mesmo indica sua vitória.
     def jaGanhou(self): return self.__ganhou
 
+    #Retorna o somatório de valores de todas as peças do jogador. Ambos os lados de uma peça são somados.
     def somatorioPecas(self):
         soma = 0
         for peca in self.__mao: soma += (peca.esq() + peca.dir())
         return soma
 
+    #Incrementa a pontuação de um jogador.
     def somaPontos(self, soma): self.__pontos += soma
 
+    #Retorna a qtd. de pontos acumulada até o momento do jogador.
     def pegaPontos(self): return self.__pontos
 
+    #Método que coordena cada uma das jogadas do jogador. Até o momento, necessita da interação de um humano para realizar
+    # uma jogada. Aguarda até que o jogador escolha uma peça válida para encaixar ou até que não possua nenhuma peça válida
+    #para jogar, passando a vez a seu oponente.
     def jogar(self, mesa, oponente):
         if self.__vezAtual == False: return
         else:

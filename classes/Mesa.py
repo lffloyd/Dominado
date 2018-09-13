@@ -1,8 +1,13 @@
+#Define a Mesa de jogo, uma abstração que representa onde as peças do dominós erão posicionadas e onde estarão
+#disponíveis peças para compra pelos jogadores.
+
+#Escitor por: Vítor Costa, Luiz Felipe
+
 from classes.Peca import *
-from classes.Jogador import *
 import random
 
 class Mesa():
+    #Construtor define os conjuntos de peças que estarão disponíveis para compra e aquelas que estão encaixadas no dominó.
     def __init__(self, totalPecas=None):
         self.__pecasAComprar = []
         self.__tabuleiro = []
@@ -15,17 +20,22 @@ class Mesa():
         resp += " (" + str(len(self.__tabuleiro)) + " peça(s))"
         return resp
 
+    #Cria as instâncias de Peça do jogo.
     def gerarPecas(self):
         pecas = [] * self.totalPecas
         for i in range(0, 7):
             for j in range(i, 7): pecas.append(Peca(i, j))
         return pecas
 
+    #Método usado para compra de peças pelo jogador. Retorna uma peça dentre as disponíveis para compra, selecionada
+    #aleatoriamente.
     def comprarPeca(self):
         pos = random.randint(0, len(self.__pecasAComprar)-1)
         peca = self.__pecasAComprar.pop(pos)
         return peca
 
+    #Método que configura as mãos dos jogadores da partida além do estado inicial do tabuleiro.
+    #Distribui peças a cada um dos jogadores e determina qual deles irá iniciar a partida baseando-se em suas peças.
     def comecarJogo(self, jogador1, jogador2):
         self.__pecasAComprar = []
         self.__pecasAComprar = self.gerarPecas()
@@ -44,6 +54,7 @@ class Mesa():
         print("Maior peça de jog. 2: " + str(maior2) + "\tSomar? " + str(somar2))
         return
 
+    #Método usado para buscar a maior peça de um jogador. Utilizado para definir o jogador iniciante numa partida.
     def procuraMaiorPeca(self, jogador):
         maior = None
         somar = True
@@ -58,13 +69,18 @@ class Mesa():
                 if ((jogador.pecas()[i]).somatorio() > maior.somatorio()): maior = jogador.pecas()[i]
         return maior, somar
 
+    #Retorna as peças disponíveis para compra.
     def pegaPecasAComprar(self): return self.__pecasAComprar
 
+    #Retorna o estado atual do tabuleiro de jogo, i.e. as peças que foram encaixadas até agora e seu posicionamento.
     def pegaTabuleiro(self): return self.__tabuleiro
 
+    #Retorna os valores mais extremos (na esquerda e na direita) do tabuleiro, i.e. os valores disponíveis para encaixe.
     def extremos(self):
         return self.__tabuleiro[0].esq(), self.__tabuleiro[len(self.__tabuleiro)-1].dir()
 
+    #Método usado para posicionar no tabuleiro uma peça escolhida pelo jogodar. Avalia se a inserção no local escolhido
+    #pode ocorrer, virando a peça caso necessário.
     def adicionarNaMesa(self, peca, pos):
         if (len(self.__tabuleiro) == 0):
             self.__tabuleiro.insert(0, peca)

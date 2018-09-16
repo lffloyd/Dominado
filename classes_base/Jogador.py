@@ -3,11 +3,12 @@
 #Escrito por: Vítor Costa, Luiz Felipe
 
 from classes_base.Cor import *
+from classes_busca.Expectiminimax import *
 
 class Jogador():
     #Construtor define atributos como a "mão" do jogador (i.e. suas peças), as peças jogáveis num dado momento (i.e. aque-
     #las que ele pode efetivamente encaixar no tabuleiro), qtd. de pontos acumulada e outros parãmetros de controle.
-    def __init__(self, ind=None):
+    def __init__(self, ind=None, ehIa=True):
         self.__ind = ind
         self.__mao = []
         self.__maoJogaveis = []
@@ -16,6 +17,8 @@ class Jogador():
         self.__jogouDaUltimaVez = False
         self.__ganhou = False
         self.__pontos = 0
+
+        self.__ehIa = ehIa
 
     def __str__(self):
         resp = "Jogador " + str(self.__ind) + " -"
@@ -75,6 +78,8 @@ class Jogador():
                     resp += str(mao.index(peca)+1) + "    "
         return resp
 
+    def pegaPecasJogaveis(self): return self.__maoJogaveis
+
     #Elimina todas as cartas de um jogador.
     def limparMao(self):
         self.__mao = []
@@ -99,6 +104,10 @@ class Jogador():
     # uma jogada. Aguarda até que o jogador escolha uma peça válida para encaixar ou até que não possua nenhuma peça válida
     #para jogar, passando a vez a seu oponente.
     def jogar(self, mesa, oponente):
+        if (self.__ehIa): return self.jogarIA(mesa, oponente)
+        else: return self.jogarHumano(mesa, oponente)
+
+    def jogarHumano(self, mesa, oponente):
         if self.__vezAtual == False: return
         else:
             adicionou = False
@@ -129,3 +138,5 @@ class Jogador():
             oponente.setaVez(True)
             if (len(self.__mao) == 0): self.__ganhou = True
             return
+
+    def jogarIA(self, mesa, oponente): return

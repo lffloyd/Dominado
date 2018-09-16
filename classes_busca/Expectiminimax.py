@@ -10,3 +10,9 @@ class Expectiminimax():
         novaMesa = copy.deepcopy(estado.mesa)
         novaMesa.adicionarNaMesa(acao.peca, acao.pos)
         return Estado(estado.jogador, estado.oponente, novaMesa)
+
+    def decisaoMinimax(self): return
+
+    def max(self): return
+
+    def min(self): return

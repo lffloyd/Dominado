@@ -3,7 +3,7 @@
 
 #Escitor por: Vítor Costa, Luiz Felipe
 
-from classes.Peca import *
+from classes_base.Peca import *
 import random
 
 class Mesa():

@@ -2,7 +2,7 @@
 
 #Escrito por: Vítor Costa, Luiz Felipe
 
-from classes.Cor import *
+from classes_base.Cor import *
 
 class Jogador():
     #Construtor define atributos como a "mão" do jogador (i.e. suas peças), as peças jogáveis num dado momento (i.e. aque-

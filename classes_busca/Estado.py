@@ -1,8 +1,12 @@
+#Define a classe Estado, responsável por descrever o estado global de uma partida num dado momento. Usada para explorar
+#as possibilidades de jogada com os algoritmos de busca Expectiminimax e Monte-Carlo tree search.
+
+#Escrito por: Luiz Felipe, Vítor Costa, Renato Bastos
+
 import copy
 
 class Estado():
-    # Se esse estado é uma vitória, o valor de utilidade é True
-    # A mesa fornece a informação de que peças ainda estão disponiveis para a compra
+    # Define o construtor de classe, que define seus atributos internos de acordo com o momento de jogo.
     def __init__(self, jogador, oponente, mesa, turno=0):
         self.jogador = copy.deepcopy(jogador)
         self.oponente = copy.deepcopy(oponente)
@@ -10,45 +14,32 @@ class Estado():
         self.__qtdPecasComprar = len(self.mesa.pegaPecasAComprar())
         self.__qtdPecasOponente = len(self.oponente.pecas())
         self.__extremoEsq, self.__extremoDir = self.mesa.extremos()
-        self.__acoes = copy.deepcopy(jogador.pegaPecasJogaveis())
+        self.__acoes = self.gerarEstados(mesa, (jogador.possibilidadesJogaveis() if (turno == 0)
+                                                else (oponente.possibilidadesJogaveis()+
+                                                      self.mesa.pegaPecasAComprar())), 0)
         self.utilidade = 0
         #Indica qual é o jogador que executa uma jogada neste estado.
         self.turno = turno
 
-    def gerarEstados(self, mesa, mao, possibilidades, turno):
+    #Gera todas as possibilidades de estados/ações dado um nó/estado origem s. Gera as possibilidades de jogadas a partir dessa
+    #raizes. As possibilidades de ações/jogadas diferem caso turno == 0 (serão jogadas do jogador max) e caso turno == 1 (serão
+    #as possíveis jogadas do jogador min).
+    def gerarEstados(self, mesa, possibilidades):
         estadosFilhos = []
         for tupla in possibilidades:
-            peca = tupla[0]
-            pos = tupla[1]
+            peca = copy.deepcopy(tupla[0])
+            pos = copy.deepcopy(tupla[1])
             novaMesa = copy.deepcopy(mesa)
             novaMesa.adicionaNaMesa(peca, pos)
             estadosFilhos.append(novaMesa)
+        return estadosFilhos
 
-        # estados = []
-        # jogadasPossiveis = jogadasPossiveis(mesa, mao) // retornar as peças
-        # que
-        # sao
-        # possiveis
-        # de
-        # ser
-        # jogadas
-        # for peca in jogadasPossiveis:
-        #     novaMesa = mesa.copy
-        #     if pecaDoisLados:
-        #         novaMesa = jogar(novaMesa, peca, 2)
-        #         estado = Estado(novaMesa, mesa.qtdpecasoponente - -, mesa.qtdpecascomprar)
-        #         estados.append(estado)
-        #     novaMesa = jogar(novaMesa, peca)
-        #     estado = Estado(novaMesa, mesa.qtdpecasoponente - -, mesa.qtdpecascomprar)
-        #     estados.append(estado)
-        # if size(jogadasPossiveis) < mesa.pecasAComprar
-        #     estado = Estado(novaMesa, mesa.qtdpecasoponente, mesa.qtdpecascomprar - -)
-        #     estados.append(estado)
-        # return estados
-
+    #Avalia se um dado nó/estado é terminal, i.e. finaliza a partida.
     def ehEstadoTerminal(self): return len(self.__acoes) == 0
 
+    #Alterna o turno de um estado. Usado para alternar entre jogadas de max e min na exploração das possibilidades de ações.
     def alternaTurno(self): self.turno = (0 if (self.turno == 1) else 1)
 
+    #Indica se o turno atual é do oponente, i.e. se o turno atual é do jogador min.
     def turnoDoOponente(self): return self.turno == 1
 

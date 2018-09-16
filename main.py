@@ -11,8 +11,8 @@ def limpaTela(sistema): os.system("cls" if (sistema == "nt") else "clear")
 
 #Inicialização de objetos do jogo.
 mesa = Mesa(28)
-jogador1 = Jogador(1, False)
-jogador2 = Jogador(2, False)
+jogador1 = Jogador(1, Jogador.HUMANO)
+jogador2 = Jogador(2, Jogador.HUMANO)
 mesa.comecarJogo(jogador1, jogador2)
 
 sistema = os.name

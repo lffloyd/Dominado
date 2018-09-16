@@ -4,21 +4,26 @@
 
 from classes_base.Cor import *
 from classes_busca.Expectiminimax import *
+from classes_busca.Estado import *
 
 class Jogador():
+    #Constantes para identificação do tipo de jogador.
+    MCTS = 2
+    EXPECTMM = 1
+    HUMANO = 0
+
     #Construtor define atributos como a "mão" do jogador (i.e. suas peças), as peças jogáveis num dado momento (i.e. aque-
     #las que ele pode efetivamente encaixar no tabuleiro), qtd. de pontos acumulada e outros parãmetros de controle.
-    def __init__(self, ind=None, ehIa=True):
+    def __init__(self, ind=None, tipo=HUMANO):
         self.__ind = ind
         self.__mao = []
         self.__maoJogaveis = []
         self.__pontos = None
         self.__vezAtual = False
         self.__jogouDaUltimaVez = False
-        self.__ganhou = False
         self.__pontos = 0
 
-        self.__ehIa = ehIa
+        self.tipo = tipo
 
     def __str__(self):
         resp = "Jogador " + str(self.__ind) + " -"
@@ -104,14 +109,19 @@ class Jogador():
     def pegaPecasJogaveis(self): return self.__maoJogaveis
 
     #Retorna todas as possibilidades de jogadas disponíveis no dado momento a esta instância de Jogador.
-    #O retorno é composto de uma matriz contendo pares [Peça, Posição de jogada].
+    #O retorno é composto de uma matriz contendo pares [Peça, Posição de jogada, Probabilidade da jogada].
+    #Nenhum cálculo mais elaborado é executado ainda para a probabilidade.
     def possibilidadesJogaveis(self, esq, dir):
         possibilidades = []
+        probabilidade = 0
         for peca in self.__maoJogaveis:
             if peca.ehJogavel(esq) and peca.ehJogavel(dir):
-                possibilidades.append([peca, esq])
-                possibilidades.append([peca.viraPeca(), dir])
-            else: possibilidades.append([peca, (esq if (peca.ehJogavel(esq)) else dir)])
+                possibilidades.append([peca, esq, probabilidade])
+                possibilidades.append([peca.viraPeca(), dir, probabilidade])
+            else: possibilidades.append([peca, (esq if (peca.ehJogavel(esq)) else dir), probabilidade])
+        #Distribui uma probabilidade equivalente para cada uma das possíveis escolhas a serem feitas.
+        probabilidade = 1 / len(possibilidades)
+        for jogada in range(len(possibilidades)): jogada[2] = probabilidade
         return possibilidades
 
     #Elimina todas as cartas de um jogador.
@@ -120,7 +130,7 @@ class Jogador():
         self.__maoJogaveis = []
 
     #Verifica se um jogador ganhou, ou seja, se a variável de controle do mesmo indica sua vitória.
-    def jaGanhou(self): return self.__ganhou
+    def jaGanhou(self): return len(self.__mao) == 0
 
     #Retorna o somatório de valores de todas as peças do jogador. Ambos os lados de uma peça são somados.
     def somatorioPecas(self):
@@ -138,7 +148,7 @@ class Jogador():
     # uma jogada. Aguarda até que o jogador escolha uma peça válida para encaixar ou até que não possua nenhuma peça válida
     #para jogar, passando a vez a seu oponente.
     def jogar(self, mesa, oponente):
-        if (self.__ehIa): return self.jogarIA(mesa, oponente)
+        if (self.tipo != self.HUMANO): return self.jogarIA(mesa, oponente)
         else: return self.jogarHumano(mesa, oponente)
 
     #Define a função 'jogar' para um jogador humano. Possibilita a escolha da peça a ser jogada e sua posição por um
@@ -172,11 +182,39 @@ class Jogador():
                 self.__maoJogaveis = []
             self.setaVez(False)
             oponente.setaVez(True)
-            if (len(self.__mao) == 0): self.__ganhou = True
+            #if (len(self.__mao) == 0): self.__ganhou = True
             return
 
     #Defina o método 'jogar' para um jogador controlado por inteligência artificial (Expectiminimax ou
     #Monte-Carlo tree search).
     def jogarIA(self, mesa, oponente):
-        Expectiminimax.decisaoMinimax(self, mesa, oponente)
+        if (self.__vezAtual == False): return
+        #Atualiza as peças jogáveis por este jogador no estado atual do jogo.
+        self.atualizaPecasJogaveis(mesa, self.__mao)
+        #Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
+        while (len(self.pegaPecasJogaveis()) == 0):
+            if (len(mesa.pegaPecasAComprar()) != 0):
+                self.adicionaPeca(mesa.comprarPeca())
+                self.atualizaPecasJogaveis(mesa, self.__mao)
+            #Caso mesmo assim não seja possível conseguir uma peça jogável, pula esta rodada sem executar movimento.
+            else: self.setaJogou(False)
+        self.atualizaPecasJogaveis(mesa, self.__mao)
+        #Caso tenha-se conseguido alguma peça jogável:
+        if (len(self.pegaPecasJogaveis()) != 0):
+            #Escolhe a melhor jogada a ser feita dado o estado atual.
+            estadoAtual = Estado(self, oponente, mesa, Estado.MAX)
+            jogada = escolheJogada(estadoAtual)
+            # Se uma jogada possível foi encontrada:
+            if (jogada != None):
+                # Executa a jogada.
+                peca = jogada[0]
+                pos = jogada[1]
+                mesa.adicionarNaMesa(peca, pos)
+                self.removePeca(mesa, peca)
+                self.setaJogou(True)
+            # Caso contrário, não executa qualquer jogada neste turno da aprtida.
+            else: self.setaJogou(False)
+        # Seta as variáveis para controle de quem é o jogador ativo atualmente no jogo.
+        self.setaVez(False)
+        oponente.setaVez(True)
         return

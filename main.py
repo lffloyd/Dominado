@@ -20,7 +20,7 @@ sistema = os.name
 #Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
 #jogadores não estejam conseguindo jogar no momento.
 while ((not jogador1.jaGanhou()) and (not jogador2.jaGanhou())):
-    #limpaTela(sistema)
+    limpaTela(sistema)
     jogador1.jogar(mesa, jogador2)
     jogador2.jogar(mesa, jogador1)
     if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())): break

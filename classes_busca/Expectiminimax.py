@@ -4,7 +4,7 @@ import copy
 
 class Expectiminimax():
     def __init__(self):
-        pass
+        return
 
     def resultado(estado, acao):
         novaMesa = copy.deepcopy(estado.mesa)

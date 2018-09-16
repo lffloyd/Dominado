@@ -11,7 +11,6 @@ class Estado():
         self.__qtdPecasOponente = len(self.oponente.pecas())
         self.__extremoEsq, self.__extremoDir = mesa.extremos()
         self.__acoes = []
-
         self.utilidade = 0
 
     def ehEstadoTerminal(self): return len(self.__acoes) == 0

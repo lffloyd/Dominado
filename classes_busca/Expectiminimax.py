@@ -8,7 +8,7 @@ import copy
 import math
 
 PROFUNDIDADE = 5  # Valor deve ser modificado, usado por enquanto apenas como placeholder.
-PROBABILIDADE = 3
+PROBABILIDADE = 2
 
 PECA = 0
 POSICAO = 1

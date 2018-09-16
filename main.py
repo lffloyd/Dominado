@@ -2,8 +2,8 @@
 
 #Escrito por: Luiz Felipe, Vítor Costa
 
-from classes.Mesa import *
-from classes.Jogador import *
+from classes_base.Mesa import *
+from classes_base.Jogador import *
 import os
 
 #Limpa a tela de um prompt de comando. Usado para facilitar a visualização do jogo caso executado em um shell ou cmd.exe.

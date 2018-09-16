@@ -36,5 +36,6 @@ class Peca():
         self.__nEsq = self.__nDir
         self.__nDir = aux
 
+    #Verifica se a instância de Peça pode ser encaixada numa dada posição de um modo ou outro (virando-a).
     def ehJogavel(self, pos):
         return (self.__nEsq == pos) or (self.__nDir == pos)

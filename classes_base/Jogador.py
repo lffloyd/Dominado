@@ -32,6 +32,13 @@ class Jogador():
     def adicionaPeca(self, peca):
         self.__mao.append(peca)
 
+    #Remove uma dada instância de Peça da mão do jogador, caso ela exista. Necessita receber uma instância de Mesa
+    #para manter a consistência da variável que armazena as peças jogáveis num dado momento pelo jogador.
+    def removePeca(self, mesa, peca):
+        if (len(self.__mao) != 0):
+            self.__mao.remove(peca)
+            self.atualizaPecasJogaveis(mesa, self.__mao)
+
     #Retorna as peças do jogador.
     def pecas(self): return self.__mao
 
@@ -78,8 +85,26 @@ class Jogador():
                     resp += str(mao.index(peca)+1) + "    "
         return resp
 
+    #Atualiza as peças jogáveis no tabuleiro de jogo no dado momento da partida.
+    def atualizaPecasJogaveis(self, mesa, mao):
+        if len(mesa.pegaTabuleiro()) == 0:
+            for peca in mao:
+                maiorPeca, nada = mesa.procuraMaiorPeca(self)
+                if peca == maiorPeca: aux = mao.index(peca)
+            for peca in mao:
+                if mao.index(peca) == aux: self.__maoJogaveis.append(peca)
+        else:
+            extremoEsq, extremoDir = mesa.extremos()
+            for peca in mao:
+                if ((peca.esq() == extremoEsq or (peca.esq() == extremoDir) or
+                         (peca.dir() == extremoEsq) or (peca.dir() == extremoDir))):
+                    self.__maoJogaveis.append(peca)
+
+    #Retorna as peças jogáveis num dado momento da partida.
     def pegaPecasJogaveis(self): return self.__maoJogaveis
 
+    #Retorna todas as possibilidades de jogadas disponíveis no dado momento a esta instância de Jogador.
+    #O retorno é composto de uma matriz contendo pares [Peça, Posição de jogada].
     def possibilidadesJogaveis(self, esq, dir):
         possibilidades = []
         for peca in self.__maoJogaveis:
@@ -116,6 +141,8 @@ class Jogador():
         if (self.__ehIa): return self.jogarIA(mesa, oponente)
         else: return self.jogarHumano(mesa, oponente)
 
+    #Define a função 'jogar' para um jogador humano. Possibilita a escolha da peça a ser jogada e sua posição por um
+    #jogador humano, que interage pelo console da aplicação.
     def jogarHumano(self, mesa, oponente):
         if self.__vezAtual == False: return
         else:
@@ -148,6 +175,8 @@ class Jogador():
             if (len(self.__mao) == 0): self.__ganhou = True
             return
 
+    #Defina o método 'jogar' para um jogador controlado por inteligência artificial (Expectiminimax ou
+    #Monte-Carlo tree search).
     def jogarIA(self, mesa, oponente):
         Expectiminimax.decisaoMinimax(self, mesa, oponente)
         return

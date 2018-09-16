@@ -80,6 +80,15 @@ class Jogador():
 
     def pegaPecasJogaveis(self): return self.__maoJogaveis
 
+    def possibilidadesJogaveis(self, esq, dir):
+        possibilidades = []
+        for peca in self.__maoJogaveis:
+            if peca.ehJogavel(esq) and peca.ehJogavel(dir):
+                possibilidades.append([peca, esq])
+                possibilidades.append([peca.viraPeca(), dir])
+            else: possibilidades.append([peca, (esq if (peca.ehJogavel(esq)) else dir)])
+        return possibilidades
+
     #Elimina todas as cartas de um jogador.
     def limparMao(self):
         self.__mao = []
@@ -139,4 +148,6 @@ class Jogador():
             if (len(self.__mao) == 0): self.__ganhou = True
             return
 
-    def jogarIA(self, mesa, oponente): return
+    def jogarIA(self, mesa, oponente):
+        Expectiminimax.decisaoMinimax(self, mesa, oponente)
+        return

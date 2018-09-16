@@ -35,3 +35,6 @@ class Peca():
         aux = self.__nEsq
         self.__nEsq = self.__nDir
         self.__nDir = aux
+
+    def ehJogavel(self, pos):
+        return (self.__nEsq == pos) or (self.__nDir == pos)

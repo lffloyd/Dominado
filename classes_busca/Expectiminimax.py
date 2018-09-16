@@ -11,7 +11,7 @@ class Expectiminimax():
         novaMesa.adicionarNaMesa(acao.peca, acao.pos)
         return Estado(estado.jogador, estado.oponente, novaMesa)
 
-    def decisaoMinimax(self): return
+    def decisaoMinimax(self, jogador, mesa, oponente): return
 
     def max(self): return
 

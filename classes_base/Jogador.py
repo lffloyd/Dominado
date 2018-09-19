@@ -1,7 +1,7 @@
 #Define a classe Jogador e seus atributos associados.
 
 #Escrito por: Vítor Costa, Luiz Felipe
-
+import random
 from classes_base.Cor import *
 from classes_busca.Expectiminimax import *
 from classes_busca.Estado import *
@@ -41,12 +41,12 @@ class Jogador():
     #para manter a consistência da variável que armazena as peças jogáveis num dado momento pelo jogador.
     def removePeca(self, mesa, peca):
         if (len(self.__mao) != 0):
-            print("removePeca(): " + str(mesa))
-            print("removePeca(): "+str(self))
-            print("\n\nPeça a remover: " + str(peca) + " ou " + str(peca.viraPeca()))
-            self.__mao.remove(peca)
-            self.__mao.remove(peca.viraPeca())
-            self.atualizaPecasJogaveis(mesa, self.__mao)
+            #print("removePeca(): " + str(mesa))
+            #print("removePeca(): "+str(self))
+            #print("\n\nPeça a remover: " + str(peca) + " ou " + str(peca.viraPeca()))
+            indice = self.__mao.index(peca)
+            self.__mao.pop(indice)
+            self.atualizaPecasJogaveis(mesa)
 
     #Retorna as peças do jogador.
     def pecas(self): return self.__mao
@@ -73,6 +73,7 @@ class Jogador():
     def pecasJogaveis(self, mesa, mao):
         resp = "                   "
         if len(mesa.pegaTabuleiro()) == 0:
+            aux = None
             for peca in mao:
                 maiorPeca, nada = mesa.procuraMaiorPeca(self)
                 if peca == maiorPeca:
@@ -90,23 +91,24 @@ class Jogador():
                          (peca.dir() == extremoEsq) or (peca.dir() == extremoDir))):
                     resp += Cor.BLUE + Cor.UNDERLINE + str(mao.index(peca)+1) + Cor.END + "    "
                     self.__maoJogaveis.append(peca)
-                else:
-                    resp += str(mao.index(peca)+1) + "    "
+                else: resp += str(mao.index(peca)+1) + "    "
         return resp
 
     #Atualiza as peças jogáveis no tabuleiro de jogo no dado momento da partida.
-    def atualizaPecasJogaveis(self, mesa, mao):
+    def atualizaPecasJogaveis(self, mesa):
+        self.__maoJogaveis = []
         if len(mesa.pegaTabuleiro()) == 0:
-            for peca in mao:
+            aux = None
+            for peca in self.__mao:
                 maiorPeca, nada = mesa.procuraMaiorPeca(self)
-                if peca == maiorPeca: aux = mao.index(peca)
-            for peca in mao:
-                if mao.index(peca) == aux: self.__maoJogaveis.append(peca)
+                if peca == maiorPeca: aux = self.__mao.index(peca)
+            for peca in self.__mao:
+                if self.__mao.index(peca) == aux: self.__maoJogaveis.append(peca)
         else:
-            extremoEsq, extremoDir = mesa.extremos()
-            for peca in mao:
-                if ((peca.esq() == extremoEsq or (peca.esq() == extremoDir) or
-                         (peca.dir() == extremoEsq) or (peca.dir() == extremoDir))):
+            esq, dir = mesa.extremos()
+            for peca in self.__mao:
+                if ((peca.esq() == esq or (peca.esq() == dir) or
+                         (peca.dir() == esq) or (peca.dir() == dir))):
                     self.__maoJogaveis.append(peca)
 
     #Retorna as peças jogáveis num dado momento da partida.
@@ -118,17 +120,16 @@ class Jogador():
     def possibilidadesJogaveis(self, mesa):
         possibilidades = []
         probabilidade = 0
+        self.atualizaPecasJogaveis(mesa)
         if (len(mesa.pegaTabuleiro()) == 0):
-            self.atualizaPecasJogaveis(mesa, self.__mao)
             for peca in self.__maoJogaveis: possibilidades.append([peca, 0, probabilidade])
             return self.__maoJogaveis
         esq, dir = mesa.extremos()
-
         for peca in self.__maoJogaveis:
             if peca.ehJogavel(esq) and peca.ehJogavel(dir):
-                possibilidades.append([peca, esq, probabilidade])
-                possibilidades.append([peca.viraPeca(), dir, probabilidade])
-            else: possibilidades.append([peca, (esq if (peca.ehJogavel(esq)) else dir), probabilidade])
+                possibilidades.append([peca, 0, probabilidade])
+                possibilidades.append([peca.viraPeca(), 1, probabilidade])
+            else: possibilidades.append([peca, (0 if (peca.ehJogavel(esq)) else 1), probabilidade])
         #Distribui uma probabilidade equivalente para cada uma das possíveis escolhas a serem feitas.
         probabilidade = 1 / len(possibilidades)
         for jogada in possibilidades: jogada[2] = probabilidade
@@ -158,6 +159,7 @@ class Jogador():
     # uma jogada. Aguarda até que o jogador escolha uma peça válida para encaixar ou até que não possua nenhuma peça válida
     #para jogar, passando a vez a seu oponente.
     def jogar(self, mesa, oponente):
+        print("Jogador " + str(self.__ind) + " tem " + str(len(self.__mao)) + " peças\n")
         if (self.tipo == self.HUMANO):
             return self.jogarHumano(mesa, oponente)
         elif (self.tipo == self.EXPECTMM):
@@ -203,20 +205,17 @@ class Jogador():
     #Defina o método 'jogar' para um jogador controlado por inteligência artificial (Expectiminimax ou
     #Monte-Carlo tree search).
     def jogarIA(self, mesa, oponente):
-        print("\n\n\n\n\n\n\n\n")
-        print(mesa)
         if (self.__vezAtual == False): return
-        print(self)
         #Atualiza as peças jogáveis por este jogador no estado atual do jogo.
-        self.atualizaPecasJogaveis(mesa, self.__mao)
+        self.atualizaPecasJogaveis(mesa)
         #Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
         while (len(self.pegaPecasJogaveis()) == 0):
             if (len(mesa.pegaPecasAComprar()) != 0):
                 self.adicionaPeca(mesa.comprarPeca())
-                self.atualizaPecasJogaveis(mesa, self.__mao)
+                self.atualizaPecasJogaveis(mesa)
             #Caso mesmo assim não seja possível conseguir uma peça jogável, pula esta rodada sem executar movimento.
             else: self.setaJogou(False)
-        self.atualizaPecasJogaveis(mesa, self.__mao)
+        self.atualizaPecasJogaveis(mesa)
         #Caso tenha-se conseguido alguma peça jogável:
         if (len(self.pegaPecasJogaveis()) != 0):
             #Escolhe a melhor jogada a ser feita dado o estado atual.
@@ -227,6 +226,7 @@ class Jogador():
             else: jogada = escolheJogada(estadoAtual)
             # Se uma jogada possível foi encontrada:
             if (jogada != None):
+                #print("!!!!!!!!!!!!!!!!!!!!!!!!!Jogada esc.:" + str(jogada[0])+"-"+str(jogada[1]))
                 # Executa a jogada.
                 peca = jogada[0]
                 pos = jogada[1]

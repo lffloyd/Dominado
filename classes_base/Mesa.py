@@ -85,6 +85,7 @@ class Mesa():
     #Método usado para posicionar no tabuleiro uma peça escolhida pelo jogodar. Avalia se a inserção no local escolhido
     #pode ocorrer, virando a peça caso necessário.
     def adicionarNaMesa(self, peca, pos):
+        print("Última peça jogada/pos.: " + str(peca) + "-" + str(pos))
         if (len(self.__tabuleiro) == 0):
             self.__tabuleiro.insert(0, peca)
             return True

@@ -18,10 +18,8 @@ class Mesa():
         resp = "Compra: "
         resp += " (" + str(len(self.__pecasAComprar)) + " peça(s))" + "\nTabuleiro: "
         for peca in self.__tabuleiro:
-            if (peca.pegaOrdem() == len(self.__tabuleiro)):
-                resp += Cor.RED + str(peca) + Cor.END
-            else:
-                resp += str(peca)
+            if (peca.pegaOrdem() == len(self.__tabuleiro)): resp += Cor.RED + str(peca) + Cor.END
+            else: resp += str(peca)
         resp += " (" + str(len(self.__tabuleiro)) + " peça(s))"
         return resp
 

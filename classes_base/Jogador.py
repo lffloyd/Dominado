@@ -8,6 +8,7 @@ from classes_busca.Estado import *
 
 class Jogador():
     #Constantes para identificação do tipo de jogador.
+    RANDOM = 3
     MCTS = 2
     EXPECTMM = 1
     HUMANO = 0
@@ -67,7 +68,7 @@ class Jogador():
     # ou se ele precisa encaixar uma peça numa das duas pontas da mesa. Para indicar quais peças o jogador pode encaixar,
     # cores são utilizadas.
     def pecasJogaveis(self, mesa, mao):
-        resp = "                    "
+        resp = "                   "
         if len(mesa.pegaTabuleiro()) == 0:
             for peca in mao:
                 maiorPeca, nada = mesa.procuraMaiorPeca(self)
@@ -148,8 +149,12 @@ class Jogador():
     # uma jogada. Aguarda até que o jogador escolha uma peça válida para encaixar ou até que não possua nenhuma peça válida
     #para jogar, passando a vez a seu oponente.
     def jogar(self, mesa, oponente):
-        if (self.tipo != self.HUMANO): return self.jogarIA(mesa, oponente)
-        else: return self.jogarHumano(mesa, oponente)
+        if (self.tipo == self.HUMANO):
+            return self.jogarHumano(mesa, oponente)
+        elif(self.tipo == self.EXPECTMM):
+            return self.jogarIA(mesa, oponente)
+        else:
+            return self.jogarRandom(mesa, oponente)
 
     #Define a função 'jogar' para um jogador humano. Possibilita a escolha da peça a ser jogada e sua posição por um
     #jogador humano, que interage pelo console da aplicação.
@@ -216,6 +221,43 @@ class Jogador():
             # Caso contrário, não executa qualquer jogada neste turno da aprtida.
             else: self.setaJogou(False)
         # Seta as variáveis para controle de quem é o jogador ativo atualmente no jogo.
+        peca.ordem(len(mesa.pegaTabuleiro()))
         self.setaVez(False)
         oponente.setaVez(True)
         return
+
+    def jogarRandom(self, mesa, oponente):
+        if self.__vezAtual == False: return
+        else:
+            adicionou = False
+            while not adicionou:
+                print("\n" + self.pecasJogaveis(mesa, self.__mao))
+                print(self)
+                print("\n" + str(mesa))
+                while (len(self.__maoJogaveis) == 0):
+                    if (len(mesa.pegaPecasAComprar()) != 0):
+                        self.adicionaPeca(mesa.comprarPeca())
+                        self.__maoJogaveis = []
+                        print("\n" + self.pecasJogaveis(mesa, self.__mao))
+                        print(self)
+                    else:
+                        self.setaJogou(False)
+                        self.setaVez(False)
+                        oponente.setaVez(True)
+                        return
+
+                posJogaveis = random.randint(0, len(self.__maoJogaveis) - 1)
+                peca = self.__maoJogaveis.pop(posJogaveis)
+
+                pos = random.randint(0,1)
+
+                self.__mao.remove(peca)
+                adicionou = mesa.adicionarNaMesa(peca, pos)
+                if (not adicionou): self.__mao.append(peca)
+                else: self.setaJogou(True)
+                self.__maoJogaveis = []
+                peca.ordem(len(mesa.pegaTabuleiro()))
+            self.setaVez(False)
+            oponente.setaVez(True)
+            #if (len(self.__mao) == 0): self.__ganhou = True
+            return

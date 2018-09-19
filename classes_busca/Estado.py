@@ -18,15 +18,14 @@ class Estado():
         self.mesa = copy.deepcopy(mesa)
         self.__qtdPecasComprar = len(self.mesa.pegaPecasAComprar())
         self.__qtdPecasOponente = len(self.oponente.pecas())
-        self.__extremoEsq, self.__extremoDir = self.mesa.extremos()
         self.acoes = []
         if (tipoEstado == self.MAX):
             jogador.atualizaPecasJogaveis(mesa, jogador.pecas())
-            self.acoes = copy.deepcopy(jogador.possibilidadesJogaveis())
+            self.acoes = copy.deepcopy(jogador.possibilidadesJogaveis(self.mesa))
         if (tipoEstado == self.MIN):
             self.acoes = self.possibilidadesOponente(oponente, mesa)
         #Atributos para valor de utilidade, probabilidade, tipo de estado (max, min ou chance) etc.
-        self.utilidade = 0
+        self.valorUtilidade = 0
         self.probabilidade = 0
         self.ultimaPecaJogada = None
         #Indica qual é tipo do estado.

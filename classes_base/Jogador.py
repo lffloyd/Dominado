@@ -112,9 +112,15 @@ class Jogador():
     #Retorna todas as possibilidades de jogadas disponíveis no dado momento a esta instância de Jogador.
     #O retorno é composto de uma matriz contendo pares [Peça, Posição de jogada, Probabilidade da jogada].
     #Nenhum cálculo mais elaborado é executado ainda para a probabilidade.
-    def possibilidadesJogaveis(self, esq, dir):
+    def possibilidadesJogaveis(self, mesa):
         possibilidades = []
         probabilidade = 0
+        if (len(mesa.pegaTabuleiro()) == 0):
+            self.atualizaPecasJogaveis(mesa, self.__mao)
+            for peca in self.__maoJogaveis: possibilidades.append([peca, 0, probabilidade])
+            return self.__maoJogaveis
+        esq, dir = mesa.extremos()
+
         for peca in self.__maoJogaveis:
             if peca.ehJogavel(esq) and peca.ehJogavel(dir):
                 possibilidades.append([peca, esq, probabilidade])
@@ -122,7 +128,7 @@ class Jogador():
             else: possibilidades.append([peca, (esq if (peca.ehJogavel(esq)) else dir), probabilidade])
         #Distribui uma probabilidade equivalente para cada uma das possíveis escolhas a serem feitas.
         probabilidade = 1 / len(possibilidades)
-        for jogada in range(len(possibilidades)): jogada[2] = probabilidade
+        for jogada in possibilidades: jogada[2] = probabilidade
         return possibilidades
 
     #Elimina todas as cartas de um jogador.
@@ -209,7 +215,10 @@ class Jogador():
         if (len(self.pegaPecasJogaveis()) != 0):
             #Escolhe a melhor jogada a ser feita dado o estado atual.
             estadoAtual = Estado(self, oponente, mesa, Estado.MAX)
-            jogada = escolheJogada(estadoAtual)
+            jogada = None
+            # Se o tabuleiro está vazio, joga a peça possível.
+            if (len(mesa.pegaTabuleiro()) == 0): jogada = [self.__maoJogaveis[0], 0]
+            else: jogada = escolheJogada(estadoAtual)
             # Se uma jogada possível foi encontrada:
             if (jogada != None):
                 # Executa a jogada.
@@ -218,10 +227,10 @@ class Jogador():
                 mesa.adicionarNaMesa(peca, pos)
                 self.removePeca(mesa, peca)
                 self.setaJogou(True)
+                peca.ordem(len(mesa.pegaTabuleiro()))
             # Caso contrário, não executa qualquer jogada neste turno da aprtida.
             else: self.setaJogou(False)
         # Seta as variáveis para controle de quem é o jogador ativo atualmente no jogo.
-        peca.ordem(len(mesa.pegaTabuleiro()))
         self.setaVez(False)
         oponente.setaVez(True)
         return
@@ -245,12 +254,9 @@ class Jogador():
                         self.setaVez(False)
                         oponente.setaVez(True)
                         return
-
                 posJogaveis = random.randint(0, len(self.__maoJogaveis) - 1)
                 peca = self.__maoJogaveis.pop(posJogaveis)
-
                 pos = random.randint(0,1)
-
                 self.__mao.remove(peca)
                 adicionou = mesa.adicionarNaMesa(peca, pos)
                 if (not adicionou): self.__mao.append(peca)

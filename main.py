@@ -25,8 +25,8 @@ def gameLoop(mesa, jogador1, jogador2):
         jogador1.jaGanhou() if (jogador1.somatorioPecas() > jogador2.somatorioPecas()) else jogador2.jaGanhou()
     if (jogador1.jaGanhou()): jogador1.somaPontos(jogador2.somatorioPecas())
     elif (jogador2.jaGanhou()): jogador2.somaPontos(jogador1.somatorioPecas())
-    if jogador1.jaGanhou(): print("\n\n\nJogador 1 venceu: " + jogador1.pegaPontos() + "pts.")
-    else: print("\n\n\nJogador 2 venceu: " + jogador2.pegaPontos() + "pts.")
+    if jogador1.jaGanhou(): print("\n\n\nJogador 1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
+    else: print("\n\n\nJogador 2 venceu: " + str(jogador2.pegaPontos()) + "pts.")
 
 
 #Menu inicial do jogo.
@@ -57,7 +57,7 @@ def menu():
         print("\n")
         mesa = Mesa(28)
         gameLoop(mesa, jogador1, jogador2)
-        escolha = int(input("Jogar novamente? S|N"))
+        escolha = input("Jogar novamente? S|N")
         if (escolha == "S") or (escolha == "s"): menu()
 
 menu()

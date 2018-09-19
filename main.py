@@ -48,12 +48,12 @@ def menu():
         if (escolha == 0):
             jogador1 = Jogador(1, Jogador.RANDOM)
             jogador2 = Jogador(2, Jogador.RANDOM)
+        if (escolha > 0) and (escolha < 3):
+            jogador1 = Jogador(1, Jogador.HUMANO)
+            jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 1) else Jogador(2, Jogador.MCTS))
         if (escolha == 3):
             jogador1 = Jogador(1, Jogador.MCTS)
             jogador2 = Jogador(2, Jogador.EXPECTMM)
-        else:
-            jogador1 = Jogador(1, Jogador.HUMANO)
-            jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 1) else Jogador(2, Jogador.MCTS))
         print("\n")
         mesa = Mesa(28)
         gameLoop(mesa, jogador1, jogador2)

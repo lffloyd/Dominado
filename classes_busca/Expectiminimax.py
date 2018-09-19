@@ -36,7 +36,7 @@ def resultado(estado, acao):
 
 # Inicia o procedimento de busca Expectiminimax.
 def expectiminimax(estado, profundidade):
-    if (estado.ehEstadoTerminal() or profundidade == 0): return estado.utilidade() #, None
+    if (estado.ehEstadoTerminal() or profundidade == 0): return estado.utilidade()
     valor = None
     if (estado.tipo == Estado.MAX):
         valor = -math.inf

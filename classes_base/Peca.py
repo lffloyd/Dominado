@@ -7,6 +7,7 @@ class Peca():
     def __init__(self, nEsq=None, nDir=None):
         self.__nEsq = nEsq
         self.__nDir = nDir
+        self.__ordem = -1
 
     def __str__(self): return "(" + str(self.__nEsq) +"|"+ str(self.__nDir) + ")"
 
@@ -26,6 +27,12 @@ class Peca():
 
     # Getter para val. direito da Peça.
     def dir(self): return self.__nDir
+
+    def pegaOrdem(self):
+        return self.__ordem
+
+    def ordem(self, ordem):
+        self.__ordem = ordem
 
     #Retorna a soma dos valores dos dois lados da Peça.
     def somatorio(self): return self.__nEsq + self.__nDir

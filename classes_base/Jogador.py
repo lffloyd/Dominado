@@ -173,13 +173,14 @@ class Jogador():
                         oponente.setaVez(True)
                         return
                 escolhida = int(input("Qual peça deseja jogar? "))
-                if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição? "))
+                if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
                 else: pos = 0
                 peca = self.__mao.pop(escolhida-1)
                 adicionou = mesa.adicionarNaMesa(peca, pos)
                 if (not adicionou): self.__mao.append(peca)
                 else: self.setaJogou(True)
                 self.__maoJogaveis = []
+                peca.ordem(len(mesa.pegaTabuleiro()))
             self.setaVez(False)
             oponente.setaVez(True)
             #if (len(self.__mao) == 0): self.__ganhou = True

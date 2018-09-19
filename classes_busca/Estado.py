@@ -85,5 +85,5 @@ class Estado():
     #Calcula o valor de utilidade de um nó. Deve-se diferenciar um nó terminal (i.e. que finaliza a partida) e um nó interno
     # pois o cálculo do valor de utilidade provavelmente será distinto entre eles.
     #Ainda não implementado.
-    def utilidade(self): return self.utilidade
+    def utilidade(self): return self.valorUtilidade
 

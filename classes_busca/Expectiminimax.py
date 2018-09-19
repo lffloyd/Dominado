@@ -25,6 +25,7 @@ def resultado(estado, acao):
     novoJogador = copy.deepcopy(estado.jogador)
     novoOponente = copy.deepcopy(estado.oponente)
     novaMesa.adicionarNaMesa(acao[PECA], acao[POSICAO])
+    novoJogador.removePeca(novaMesa, acao[PECA])
     novoJogador.setaJogou(True)
     novoJogador.setaVez(False)
     novoOponente.setaVez(True)

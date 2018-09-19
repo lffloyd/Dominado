@@ -23,7 +23,6 @@ class Jogador():
         self.__vezAtual = False
         self.__jogouDaUltimaVez = False
         self.__pontos = 0
-
         self.tipo = tipo
 
     def __str__(self):
@@ -42,7 +41,11 @@ class Jogador():
     #para manter a consistência da variável que armazena as peças jogáveis num dado momento pelo jogador.
     def removePeca(self, mesa, peca):
         if (len(self.__mao) != 0):
+            print("removePeca(): " + str(mesa))
+            print("removePeca(): "+str(self))
+            print("\n\nPeça a remover: " + str(peca) + " ou " + str(peca.viraPeca()))
             self.__mao.remove(peca)
+            self.__mao.remove(peca.viraPeca())
             self.atualizaPecasJogaveis(mesa, self.__mao)
 
     #Retorna as peças do jogador.
@@ -157,7 +160,7 @@ class Jogador():
     def jogar(self, mesa, oponente):
         if (self.tipo == self.HUMANO):
             return self.jogarHumano(mesa, oponente)
-        elif(self.tipo == self.EXPECTMM):
+        elif (self.tipo == self.EXPECTMM):
             return self.jogarIA(mesa, oponente)
         else:
             return self.jogarRandom(mesa, oponente)
@@ -200,7 +203,10 @@ class Jogador():
     #Defina o método 'jogar' para um jogador controlado por inteligência artificial (Expectiminimax ou
     #Monte-Carlo tree search).
     def jogarIA(self, mesa, oponente):
+        print("\n\n\n\n\n\n\n\n")
+        print(mesa)
         if (self.__vezAtual == False): return
+        print(self)
         #Atualiza as peças jogáveis por este jogador no estado atual do jogo.
         self.atualizaPecasJogaveis(mesa, self.__mao)
         #Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
@@ -227,7 +233,7 @@ class Jogador():
                 mesa.adicionarNaMesa(peca, pos)
                 self.removePeca(mesa, peca)
                 self.setaJogou(True)
-                peca.ordem(len(mesa.pegaTabuleiro()))
+                #peca.ordem(len(mesa.pegaTabuleiro()))
             # Caso contrário, não executa qualquer jogada neste turno da aprtida.
             else: self.setaJogou(False)
         # Seta as variáveis para controle de quem é o jogador ativo atualmente no jogo.

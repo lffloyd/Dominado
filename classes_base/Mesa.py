@@ -16,7 +16,7 @@ class Mesa():
 
     def __str__(self):
         resp = "Compra: "
-        resp += " (" + str(len(self.__pecasAComprar)) + " peça(s))" + "\nTabuleiro: "
+        resp += " (" + str(len(self.__pecasAComprar)) + " peça(s))" + ", \tTabuleiro: "
         for peca in self.__tabuleiro:
             if (peca.pegaOrdem() == len(self.__tabuleiro)): resp += Cor.RED + str(peca) + Cor.END
             else: resp += str(peca)
@@ -85,7 +85,6 @@ class Mesa():
     #Método usado para posicionar no tabuleiro uma peça escolhida pelo jogodar. Avalia se a inserção no local escolhido
     #pode ocorrer, virando a peça caso necessário.
     def adicionarNaMesa(self, peca, pos):
-        print("Última peça jogada/pos.: " + str(peca) + "-" + str(pos))
         if (len(self.__tabuleiro) == 0):
             self.__tabuleiro.insert(0, peca)
             return True

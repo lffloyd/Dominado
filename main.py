@@ -22,7 +22,7 @@ def gameLoop(mesa, jogador1, jogador2):
         if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())): break
     #Atualização da pontuação do jogador vencedor.
     if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())):
-        jogador1.jaGanhou() if (jogador1.somatorioPecas() > jogador2.somatorioPecas()) else jogador2.jaGanhou()
+        jogador1.setaGanhou(True) if (jogador1.somatorioPecas() < jogador2.somatorioPecas()) else jogador2.setaGanhou(True)
     if (jogador1.jaGanhou()): jogador1.somaPontos(jogador2.somatorioPecas())
     elif (jogador2.jaGanhou()): jogador2.somaPontos(jogador1.somatorioPecas())
     if jogador1.jaGanhou(): print("\n\n\nJogador 1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
@@ -31,7 +31,7 @@ def gameLoop(mesa, jogador1, jogador2):
 
 #Menu inicial do jogo.
 def menu():
-    print("\n***************************Dominado v 0.01***************************")
+    print("\n\n\n\n\n\n***************************Dominado v 0.01***************************")
     print("(J)ogar")
     print("(S)air")
     escolha = input()

@@ -1,6 +1,7 @@
 #Define a classe Jogador e seus atributos associados.
 
 #Escrito por: Vítor Costa, Luiz Felipe
+
 import random
 from classes_base.Cor import *
 from classes_busca.Expectiminimax import *
@@ -29,21 +30,18 @@ class Jogador():
         resp = "Jogador " + str(self.__ind) + " -"
         resp += "\tMão: "
         for peca in self.__mao: resp += str(peca)
-        resp += "\tVez atual: "
+        resp += ",\tVez atual: "
         resp += ("Sim" if(self.__vezAtual) else "Não")
+        resp += ",\tPossui: ("+str(len(self.__mao))+" peça(s))"
         return resp
 
     #Adiciona uma peça à mão do jogador.
-    def adicionaPeca(self, peca):
-        self.__mao.append(peca)
+    def adicionaPeca(self, peca): self.__mao.append(peca)
 
     #Remove uma dada instância de Peça da mão do jogador, caso ela exista. Necessita receber uma instância de Mesa
     #para manter a consistência da variável que armazena as peças jogáveis num dado momento pelo jogador.
     def removePeca(self, mesa, peca):
         if (len(self.__mao) != 0):
-            #print("removePeca(): " + str(mesa))
-            #print("removePeca(): "+str(self))
-            #print("\n\nPeça a remover: " + str(peca) + " ou " + str(peca.viraPeca()))
             indice = self.__mao.index(peca)
             self.__mao.pop(indice)
             self.atualizaPecasJogaveis(mesa)
@@ -135,13 +133,24 @@ class Jogador():
         for jogada in possibilidades: jogada[2] = probabilidade
         return possibilidades
 
+    def compraDaMesa(self, mesa):
+        self.atualizaPecasJogaveis(mesa)
+        while (len(self.pegaPecasJogaveis()) == 0):
+            if (len(mesa.pegaPecasAComprar()) != 0):
+                self.adicionaPeca(mesa.comprarPeca())
+                self.atualizaPecasJogaveis(mesa)
+
     #Elimina todas as cartas de um jogador.
     def limparMao(self):
         self.__mao = []
         self.__maoJogaveis = []
 
-    #Verifica se um jogador ganhou, ou seja, se a variável de controle do mesmo indica sua vitória.
+    #Indica se um jogador ganhou, ou seja, se a variável de controle do mesmo indica sua vitória ou não.
     def jaGanhou(self): return len(self.__mao) == 0
+
+    #'Seta' se o jogador ganhou ou não a partida.
+    def setaGanhou(self, bool):
+        if (bool): self.__mao = []
 
     #Retorna o somatório de valores de todas as peças do jogador. Ambos os lados de uma peça são somados.
     def somatorioPecas(self):
@@ -159,7 +168,7 @@ class Jogador():
     # uma jogada. Aguarda até que o jogador escolha uma peça válida para encaixar ou até que não possua nenhuma peça válida
     #para jogar, passando a vez a seu oponente.
     def jogar(self, mesa, oponente):
-        print("Jogador " + str(self.__ind) + " tem " + str(len(self.__mao)) + " peças\n")
+        if (not (self.tipo == self.HUMANO)): print(self)
         if (self.tipo == self.HUMANO):
             return self.jogarHumano(mesa, oponente)
         elif (self.tipo == self.EXPECTMM):
@@ -199,7 +208,6 @@ class Jogador():
                 peca.ordem(len(mesa.pegaTabuleiro()))
             self.setaVez(False)
             oponente.setaVez(True)
-            #if (len(self.__mao) == 0): self.__ganhou = True
             return
 
     #Defina o método 'jogar' para um jogador controlado por inteligência artificial (Expectiminimax ou
@@ -226,14 +234,13 @@ class Jogador():
             else: jogada = escolheJogada(estadoAtual)
             # Se uma jogada possível foi encontrada:
             if (jogada != None):
-                #print("!!!!!!!!!!!!!!!!!!!!!!!!!Jogada esc.:" + str(jogada[0])+"-"+str(jogada[1]))
                 # Executa a jogada.
                 peca = jogada[0]
                 pos = jogada[1]
                 mesa.adicionarNaMesa(peca, pos)
                 self.removePeca(mesa, peca)
                 self.setaJogou(True)
-                #peca.ordem(len(mesa.pegaTabuleiro()))
+                peca.ordem(len(mesa.pegaTabuleiro()))
             # Caso contrário, não executa qualquer jogada neste turno da aprtida.
             else: self.setaJogou(False)
         # Seta as variáveis para controle de quem é o jogador ativo atualmente no jogo.
@@ -271,5 +278,4 @@ class Jogador():
                 peca.ordem(len(mesa.pegaTabuleiro()))
             self.setaVez(False)
             oponente.setaVez(True)
-            #if (len(self.__mao) == 0): self.__ganhou = True
             return

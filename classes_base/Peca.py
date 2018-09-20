@@ -12,8 +12,7 @@ class Peca():
     def __str__(self): return "(" + str(self.__nEsq) +"|"+ str(self.__nDir) + ")"
 
     #Método de comparação entre Peças. Retorna se duas peças equivalem entre si de acordo com o método abaixo.
-    def __cmp__(self, other):
-        return self.__eq__(other)
+    def __cmp__(self, other): return self.__eq__(other)
 
     # Método de verificação de equivalência de Peças. Compara apenas se os números de duas Peças são iguais.
     def __eq__(self, other):
@@ -28,11 +27,9 @@ class Peca():
     # Getter para val. direito da Peça.
     def dir(self): return self.__nDir
 
-    def pegaOrdem(self):
-        return self.__ordem
+    def pegaOrdem(self): return self.__ordem
 
-    def ordem(self, ordem):
-        self.__ordem = ordem
+    def ordem(self, ordem): self.__ordem = ordem
 
     #Retorna a soma dos valores dos dois lados da Peça.
     def somatorio(self): return self.__nEsq + self.__nDir
@@ -45,5 +42,4 @@ class Peca():
         return self
 
     #Verifica se a instância de Peça pode ser encaixada numa dada posição de um modo ou outro (virando-a).
-    def ehJogavel(self, pos):
-        return (self.__nEsq == pos) or (self.__nDir == pos)
+    def ehJogavel(self, pos): return (self.__nEsq == pos) or (self.__nDir == pos)

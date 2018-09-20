@@ -37,7 +37,7 @@ class Estado():
     #Considera que o oponente pode possuir todas as peças que não estão na mão do jogador ou encaixadas na mesa de jogo,
     #i.e. todas as peças em sua mão e todas peças disponíveis para compra.
     #A probabilidade de uma peça existir já está sendo levada em consideração, mas nenhum cálculo mais complexo é executado
-    #para obtê-la exceto
+    #para obtê-la.
     def possibilidadesOponente(self, oponente, mesa):
         pecasMesa = mesa.pegaPecasAComprar()
         possibilidades = []
@@ -66,8 +66,11 @@ class Estado():
     # possibilidades de ações.
     def alternaTipo(self, tipoEstado): self.tipo = tipoEstado
 
-    ############Precisa finalizar esta função utilidade().############
     #Calcula o valor de utilidade de um nó. Deve-se diferenciar um nó terminal (i.e. que finaliza a partida) e um nó interno
     # pois o cálculo do valor de utilidade provavelmente será distinto entre eles.
     #Ainda não implementado.
-    def utilidade(self): return self.valorUtilidade
+    def utilidade(self):
+        #Por enquanto a utilidade é calculada da mesma forma para qualquer tipo de nó, i.e. terminal ou não.
+        fat1 = len(self.oponente.pecas()) - len(self.jogador.pecas())
+        fat2 = (self.oponente.somatorioPecas() if (fat1 >= 0) else self.jogador.somatorioPecas())
+        return fat1*fat2

@@ -4,14 +4,12 @@
 
 #Escrito por: Vítor Costa.
 
-import copy
-
 class EstadoMCTS():
     #Construtor de classe. Define atributos associados ao estado global de uma partida.
     def __init__(self, jogador, oponente, mesa):
-        self.jogador = copy.deepcopy(jogador)
-        self.oponente = copy.deepcopy(oponente)
-        self.mesa = copy.deepcopy(mesa)
+        self.jogador = jogador
+        self.oponente = oponente
+        self.mesa = mesa
         self.qtdPecasComprar = len(self.mesa.pegaPecasAComprar())
         self.qtdPecasOponente = len(self.oponente.pecas())
         self.probabilidade = 0

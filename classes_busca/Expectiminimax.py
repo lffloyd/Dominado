@@ -40,7 +40,8 @@ def resultado(estado, acao):
     if ((novoJogador.jaGanhou() or novoOponente.jaGanhou()) or
             (not novoJogador.jogouRodada() or not novoOponente.jogouRodada())):
         estado.setaEstadoTerminal(True)
-    return Estado(novoJogador, novoOponente, novaMesa, novoTipo, tipoAnterior)
+    return Estado(novoOponente, novoJogador, novaMesa, novoTipo, tipoAnterior) \
+        if (novoTipo == Estado.MIN) else Estado(novoJogador, novoOponente, novaMesa, novoTipo, tipoAnterior)
 
 
 # Inicia o procedimento de busca Expectiminimax.

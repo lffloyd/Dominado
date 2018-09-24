@@ -18,8 +18,9 @@ class Peca():
     def __eq__(self, other):
         # Checa se "other" é instância de Peça.
         if isinstance(other, self.__class__):
-            return ((self.__nEsq == other.__nEsq) and (self.__nDir == other.__nDir)) \
-                   or ((self.__nEsq == other.__nDir) and (self.__nDir == other.__nEsq))
+            if (self.__nEsq == other.esq()) and (self.__nDir == other.dir()): return True
+            if (self.__nEsq == other.dir()) and (self.__nDir == other.esq()): return True
+        return False
 
     #Getter para val. esquerdo da Peça.
     def esq(self): return self.__nEsq

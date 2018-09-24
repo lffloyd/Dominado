@@ -4,6 +4,7 @@
 #Escrito por: Luiz Felipe, Vítor Costa, Renato Bastos
 
 import copy
+import math
 
 class Estado():
     # Constantes usadas para indicação do tipo de estado/nó:
@@ -66,11 +67,27 @@ class Estado():
     # possibilidades de ações.
     def alternaTipo(self, tipoEstado): self.tipo = tipoEstado
 
+    def heuristica1(self):
+        fat1 = len(self.oponente.pecas()) - len(self.jogador.pecas())
+        fat2 = None
+        if (self.jogador.pecas() != []):
+            peca, somar = self.mesa.procuraMaiorPeca(self.jogador)
+            fat2 = (peca.esq()*peca.dir() if (peca != None) else fat1)
+        else:
+            fat2 = len(self.oponente.pecas())
+        return (fat1*fat2 if (fat1 != 0) else fat2)
+
+    def heuristica2(self):
+        fat1 = len(self.oponente.pecas()) - len(self.jogador.pecas())
+        esq, dir = self.mesa.extremos()
+        contagemMesaEsq, contagemMesaDir = self.mesa.contarValor(esq), self.mesa.contarValor(dir)
+        contagemJogadorEsq, contagemJogadorDir = self.jogador.contarValor(esq), self.jogador.contarValor(dir)
+        fat2 = math.sqrt((contagemMesaEsq ** 2) + (contagemMesaDir ** 2))
+        fat3 = math.sqrt((contagemJogadorEsq ** 2) + (contagemJogadorDir ** 2))
+        return ((fat1 * math.sqrt(fat2 + fat3)) if (fat1 != 0) else ((fat2 + fat3)))
+
     #Calcula o valor de utilidade de um nó. Deve-se diferenciar um nó terminal (i.e. que finaliza a partida) e um nó interno
     # pois o cálculo do valor de utilidade provavelmente será distinto entre eles.
     #Ainda não implementado.
     def utilidade(self):
-        #Por enquanto a utilidade é calculada da mesma forma para qualquer tipo de nó, i.e. terminal ou não.
-        fat1 = len(self.oponente.pecas()) - len(self.jogador.pecas())
-        fat2 = (self.oponente.somatorioPecas() if (fat1 >= 0) else self.jogador.somatorioPecas())
-        return fat1*fat2
+        return self.heuristica2()

@@ -12,21 +12,28 @@ def limpaTela(sistema): os.system("cls" if (sistema == "nt") else "clear")
 sistema = os.name
 
 def gameLoop(mesa, jogador1, jogador2):
-    mesa.comecarJogo(jogador1, jogador2)
-    #Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
-    #jogadores não estejam conseguindo jogar no momento.
-    while ((not jogador1.jaGanhou()) and (not jogador2.jaGanhou())):
-        #limpaTela(sistema)
-        jogador1.jogar(mesa, jogador2)
-        jogador2.jogar(mesa, jogador1)
-        if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())): break
-    #Atualização da pontuação do jogador vencedor.
-    if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())):
-        jogador1.setaGanhou(True) if (jogador1.somatorioPecas() < jogador2.somatorioPecas()) else jogador2.setaGanhou(True)
-    if (jogador1.jaGanhou()): jogador1.somaPontos(jogador2.somatorioPecas())
-    elif (jogador2.jaGanhou()): jogador2.somaPontos(jogador1.somatorioPecas())
-    if jogador1.jaGanhou(): print("\n\n\nJ1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
-    else: print("\n\n\nJ2 venceu: " + str(jogador2.pegaPontos()) + "pts.")
+    n = int(input("Repetições do cenário: "))
+    for i in range(n):
+        mesa.comecarJogo(jogador1, jogador2)
+        #Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
+        #jogadores não estejam conseguindo jogar no momento.
+        while ((not jogador1.jaGanhou()) and (not jogador2.jaGanhou())):
+            jogador1.jogar(mesa, jogador2)
+            jogador2.jogar(mesa, jogador1)
+            if ((not jogador1.jogouRodada()) or (not jogador2.jogouRodada())): break
+        #Atualização da pontuação do jogador vencedor.
+        if ((not jogador1.jogouRodada()) or (not jogador2.jogouRodada())):
+            jogador1.setaGanhou(True) if (jogador1.somatorioPecas() < jogador2.somatorioPecas()) else jogador2.setaGanhou(True)
+        if (jogador1.jaGanhou()):
+            jogador1.vitorias = jogador1.vitorias + 1
+            jogador1.somaPontos(jogador2.somatorioPecas())
+        elif (jogador2.jaGanhou()):
+            jogador2.vitorias = jogador2.vitorias + 1
+            jogador2.somaPontos(jogador1.somatorioPecas())
+        if jogador1.jaGanhou(): print("\n\n\nJ1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
+        else: print("\n\n\nJ2 venceu: " + str(jogador2.pegaPontos()) + "pts.")
+    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + "\tPts. totais: " + str(jogador1.pegaPontos()))
+    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + "\tPts. totais: " + str(jogador2.pegaPontos()))
 
 
 #Menu inicial do jogo.

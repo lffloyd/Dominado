@@ -40,6 +40,7 @@ class Mesa():
     #Método que configura as mãos dos jogadores da partida além do estado inicial do tabuleiro.
     #Distribui peças a cada um dos jogadores e determina qual deles irá iniciar a partida baseando-se em suas peças.
     def comecarJogo(self, jogador1, jogador2):
+        self.__tabuleiro = []
         self.__pecasAComprar = []
         self.__pecasAComprar = self.gerarPecas()
         jogador1.limparMao()
@@ -108,3 +109,9 @@ class Mesa():
                     if (dirIgual and not esqIgual): peca.viraPeca()
                     self.__tabuleiro.append(peca)
                     return True
+
+    def contarValor(self, valor):
+        cont = 0
+        for peca in self.__tabuleiro:
+            if (peca.esq() == valor) or (peca.dir() == valor): cont += 1
+        return cont

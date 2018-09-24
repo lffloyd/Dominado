@@ -4,6 +4,7 @@
 
 import random
 from classes_base.Cor import *
+from classes_base.Peca import *
 from classes_busca.Expectiminimax import *
 from classes_busca.Estado import *
 from classes_busca.EstadoMCTS import *
@@ -22,10 +23,10 @@ class Jogador():
         self.__ind = ind
         self.__mao = []
         self.__maoJogaveis = []
-        self.__pontos = None
         self.__vezAtual = False
         self.__jogouDaUltimaVez = False
         self.__pontos = 0
+        self.vitorias = 0
         self.tipo = tipo
         self.tipoStr = None
         if (self.tipo == self.HUMANO): self.tipoStr = "HUMANO"
@@ -52,6 +53,18 @@ class Jogador():
             indice = self.__mao.index(peca)
             self.__mao.pop(indice)
             self.atualizaPecasJogaveis(mesa)
+
+    def removePeca2(self, mesa, peca):
+        #print("Caralho: " + str(peca))
+        resp = ""
+        for p in self.__mao: resp += str(p)
+        #print("removePeca2(): " + resp)
+        if (len(self.__mao) != 0):
+            self.__mao.remove(peca)
+            self.atualizaPecasJogaveis(mesa)
+            resp = ""
+            for p in self.__mao: resp += str(p)
+            #print("removePeca2(): " + resp)
 
     #Retorna as peças do jogador.
     def pecas(self): return self.__mao
@@ -102,11 +115,11 @@ class Jogador():
     #Atualiza as peças jogáveis no tabuleiro de jogo no dado momento da partida.
     def atualizaPecasJogaveis(self, mesa):
         self.__maoJogaveis = []
-        if len(mesa.pegaTabuleiro()) == 0:
+        if (len(mesa.pegaTabuleiro()) == 0):
             aux = None
             for peca in self.__mao:
                 maiorPeca, nada = mesa.procuraMaiorPeca(self)
-                if peca == maiorPeca: aux = self.__mao.index(peca)
+                if (peca == maiorPeca): aux = self.__mao.index(peca)
             for peca in self.__mao:
                 if self.__mao.index(peca) == aux: self.__maoJogaveis.append(peca)
         else:
@@ -142,15 +155,29 @@ class Jogador():
 
     def compraDaMesa(self, mesa):
         self.atualizaPecasJogaveis(mesa)
+        #i = 0
         while (len(self.pegaPecasJogaveis()) == 0):
             if (len(mesa.pegaPecasAComprar()) != 0):
                 peca = mesa.comprarPeca()
-                print("Peça comprada: " + str(peca))
                 self.adicionaPeca(peca)
                 self.atualizaPecasJogaveis(mesa)
-                for peca in self.__mao: print(peca)
-                print("J"+str(self.__ind)+" comprou uma peça.")
-            else: return
+                #i += 1
+            else: break
+        #if (i != 0): print("J" + str(self.__ind) + " comprou " + str(i) + " peça(s).")
+        return
+
+    def compraDaMesa2(self, mesa):
+        self.atualizaPecasJogaveis(mesa)
+        #i = 0
+        while (len(self.pegaPecasJogaveis()) == 0):
+            if (len(mesa.pegaPecasAComprar()) != 0):
+                peca = mesa.comprarPeca()
+                self.adicionaPeca(peca)
+                self.atualizaPecasJogaveis(mesa)
+                #i += 1
+            else: break
+        #if (i != 0): print("J" + str(self.__ind) + " comprou " + str(i) + " peça(s).")
+        return
 
     #Elimina todas as cartas de um jogador.
     def limparMao(self):
@@ -222,7 +249,7 @@ class Jogador():
         #Atualiza as peças jogáveis por este jogador no estado atual do jogo.
         self.atualizaPecasJogaveis(mesa)
         #Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
-        if (len(self.pegaPecasJogaveis()) == 0): self.compraDaMesa(mesa)
+        if (len(self.pegaPecasJogaveis()) == 0): self.compraDaMesa2(mesa)
         print("\n" + str(mesa))
         print("\n" + self.pecasJogaveis(mesa, self.__mao))
         print(self)
@@ -230,9 +257,6 @@ class Jogador():
         if (len(self.pegaPecasJogaveis()) == 0):
             self.setaJogou(False)
             print("J" + str(self.__ind) + " passou a vez.")
-        #self.atualizaPecasJogaveis(mesa)
-        #Caso tenha-se conseguido alguma peça jogável:
-        #if (len(self.pegaPecasJogaveis()) != 0):
         else:
             #Escolhe a melhor jogada a ser feita dado o estado atual.
             estadoAtual = Estado(self, oponente, mesa, Estado.MAX)
@@ -246,7 +270,16 @@ class Jogador():
                 peca = jogada[0]
                 pos = jogada[1]
                 mesa.adicionarNaMesa(peca, pos)
-                self.removePeca(mesa, peca)
+                #if (peca in self.__mao): print(str(peca)+" está na mão")
+                self.removePeca2(mesa, Peca(peca.esq(), peca.dir()))
+                #resp = ""
+                #for peca in self.__mao: resp += str(peca)
+                #print(".remove(): " + resp)
+                #self.__mao.remove(peca)
+                #self.atualizaPecasJogaveis(mesa)
+                #resp = ""
+                #for peca in self.__mao: resp += str(peca)
+                #print(".remove(): " + resp)
                 self.setaJogou(True)
                 peca.ordem(len(mesa.pegaTabuleiro()))
             # Caso contrário, não executa qualquer jogada neste turno da aprtida.
@@ -262,7 +295,7 @@ class Jogador():
         if self.__vezAtual == False: return
         self.atualizaPecasJogaveis(mesa)
         # Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
-        if (len(self.pegaPecasJogaveis()) == 0): self.compraDaMesa(mesa)
+        if (len(self.pegaPecasJogaveis()) == 0): self.compraDaMesa2(mesa)
         print("\n" + str(mesa))
         print("\n" + self.pecasJogaveis(mesa, self.__mao))
         print(self)
@@ -272,19 +305,11 @@ class Jogador():
         else:
             possibilidades = self.possibilidadesJogaveis(mesa)
             escolhida = random.randint(0, len(possibilidades) - 1)
-            #escolhida = random.randint(0, len(self.__maoJogaveis) - 1)
-            #peca = self.__maoJogaveis.pop(escolhida)
-            #peca = self.__maoJogaveis.pop(possibilidades[escolhida][0])
             peca = possibilidades[escolhida][0]
             pos = possibilidades[escolhida][1]
             self.__maoJogaveis.remove(peca)
-            #pos = random.randint(0, 1)
             self.__mao.remove(peca)
             adicionou = mesa.adicionarNaMesa(peca, pos)
-            #if (not adicionou):
-            #    self.__mao.append(peca)
-            #    self.jogarRandom(mesa, oponente)
-            #else: self.setaJogou(True)
             self.setaJogou(True)
             self.__maoJogaveis = []
             peca.ordem(len(mesa.pegaTabuleiro()))
@@ -327,3 +352,9 @@ class Jogador():
             self.setaVez(False)
             oponente.setaVez(True)
             return
+
+    def contarValor(self, valor):
+        cont = 0
+        for peca in self.__mao:
+            if (peca.esq() == valor) or (peca.dir() == valor): cont += 1
+        return cont

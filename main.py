@@ -19,9 +19,10 @@ def gameLoop(mesa, jogador1, jogador2):
         #Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
         #jogadores não estejam conseguindo jogar no momento.
         while ((not jogador1.jaGanhou()) and (not jogador2.jaGanhou())):
+            # limpaTela(sistema)
             jogador1.jogar(mesa, jogador2)
             jogador2.jogar(mesa, jogador1)
-            if ((not jogador1.jogouRodada()) or (not jogador2.jogouRodada())): break
+            if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())): break
         #Atualização da pontuação do jogador vencedor.
         if ((not jogador1.jogouRodada()) or (not jogador2.jogouRodada())):
             jogador1.setaGanhou(True) if (jogador1.somatorioPecas() < jogador2.somatorioPecas()) else jogador2.setaGanhou(True)

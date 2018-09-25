@@ -1,6 +1,6 @@
 #Código principal de execução do jogo.
 
-#Escrito por: Luiz Felipe, Vítor Costa
+#Escrito por: Luiz Felipe, Vítor Costa.
 
 from classes_base.Mesa import *
 from classes_base.Jogador import *
@@ -13,6 +13,7 @@ sistema = os.name
 
 def gameLoop(mesa, jogador1, jogador2):
     n = int(input("Repetições do cenário: "))
+    if (n <= 0): return
     for i in range(n):
         mesa.comecarJogo(jogador1, jogador2)
         #Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
@@ -32,44 +33,50 @@ def gameLoop(mesa, jogador1, jogador2):
             jogador2.somaPontos(jogador1.somatorioPecas())
         if jogador1.jaGanhou(): print("\n\n\nJ1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
         else: print("\n\n\nJ2 venceu: " + str(jogador2.pegaPontos()) + "pts.")
-    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + "\tPts. totais: " + str(jogador1.pegaPontos()))
-    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + "\tPts. totais: " + str(jogador2.pegaPontos()))
+    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador1.vitorias/n)*100) +
+          "%,\tPts. totais: " + str(jogador1.pegaPontos()))
+    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador2.vitorias/n)*100) +
+          "%,\tPts. totais: " + str(jogador2.pegaPontos()))
 
 
 #Menu inicial do jogo.
 def menu():
-    print("\n\n\n\n\n\n***************************Dominado v 0.01***************************")
+    print("***************************Dominado v 0.01***************************")
     print("(J)ogar")
     print("(S)air")
     escolha = input()
-    if (escolha == "J") or (escolha == "j"):
-        # Escolha de modos de jogo.
-        print("0. Random vs. Random")
-        print("1. Random vs. Expectiminimax")
-        print("2. Random vs. MCTS")
-        print("3. Humano vs. Expectiminimax")
-        print("4. Humano vs. MCTS")
-        print("5. MCTS vs. Expectiminimax")
-        escolha = int(input())
-        jogador1 = None
-        jogador2 = None
-        # Inicialização de objetos do jogo.
-        if (escolha == 0):
-            jogador1 = Jogador(1, Jogador.RANDOM)
-            jogador2 = Jogador(2, Jogador.EXPECTMM)
-        if (escolha > 0) and (escolha < 3):
-            jogador1 = Jogador(1, Jogador.RANDOM)
-            jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 1) else Jogador(2, Jogador.MCTS))
-        if (escolha > 2) and (escolha < 5):
-            jogador1 = Jogador(1, Jogador.HUMANO)
-            jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 3) else Jogador(2, Jogador.MCTS))
-        if (escolha == 5):
-            jogador1 = Jogador(1, Jogador.MCTS)
-            jogador2 = Jogador(2, Jogador.EXPECTMM)
-        print("\n")
-        mesa = Mesa(28)
-        gameLoop(mesa, jogador1, jogador2)
-        escolha = input("Jogar novamente? S|N")
-        if (escolha == "S") or (escolha == "s"): menu()
+    if (escolha == "J") or (escolha == "j"): escolherModoDeJogo()
+
+# Seleção de modos de jogo.
+def escolherModoDeJogo():
+    print("\n\n\n\n\n")
+    print("0. Random vs. Random")
+    print("1. Random vs. Expectiminimax")
+    print("2. Random vs. MCTS")
+    print("3. Humano vs. Expectiminimax")
+    print("4. Humano vs. MCTS")
+    print("5. MCTS vs. Expectiminimax")
+    escolha = int(input())
+    jogador1 = None
+    jogador2 = None
+    # Inicialização de objetos do jogo.
+    if (escolha <= 0) or (escolha > 5):
+        jogador1 = Jogador(1, Jogador.RANDOM)
+        jogador2 = Jogador(2, Jogador.RANDOM)
+    if (escolha > 0) and (escolha < 3):
+        jogador1 = Jogador(1, Jogador.RANDOM)
+        jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 1) else Jogador(2, Jogador.MCTS))
+    if (escolha > 2) and (escolha < 5):
+        jogador1 = Jogador(1, Jogador.HUMANO)
+        jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 3) else Jogador(2, Jogador.MCTS))
+    if (escolha == 5):
+        jogador1 = Jogador(1, Jogador.MCTS)
+        jogador2 = Jogador(2, Jogador.EXPECTMM)
+    print("\n")
+    mesa = Mesa(28)
+    gameLoop(mesa, jogador1, jogador2)
+    escolha = input("Jogar novamente? S|N")
+    if (escolha == "S") or (escolha == "s"): escolherModoDeJogo()
+    else: return
 
 menu()

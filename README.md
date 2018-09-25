@@ -55,5 +55,5 @@ Veja a lista de [contribuidores](https://github.com/lffloyd/TrabalhoIA1_Domino/c
 
 ## Licença
 
-Projeto licenciado sob a licença MIT - leia [LICENSE.md](LICENSE.md) para maiores detalhes.
+Projeto licenciado sob a licença MIT - leia [LICENSE.md](https://github.com/lffloyd/TrabalhoIA1_Domino/blob/rev0.1/LICENSE) para maiores detalhes.
 

@@ -1,7 +1,7 @@
 #Define a Mesa de jogo, uma abstração que representa onde as peças do dominós erão posicionadas e onde estarão
 #disponíveis peças para compra pelos jogadores.
 
-#Escitor por: Vítor Costa, Luiz Felipe
+#Escitor por: Vítor Costa, Luiz Felipe.
 
 from classes_base.Peca import *
 from classes_base.Cor import *
@@ -13,6 +13,7 @@ class Mesa():
         self.__pecasAComprar = []
         self.__tabuleiro = []
         self.totalPecas = totalPecas
+        self.fechada = False
 
     def __str__(self):
         resp = "Compra: "
@@ -110,6 +111,7 @@ class Mesa():
                     self.__tabuleiro.append(peca)
                     return True
 
+    # Conta a ocorrência de um dado valor entre as peças da mesa (no caso, as peças já encaixadas no tabuleiro).
     def contarValor(self, valor):
         cont = 0
         for peca in self.__tabuleiro:

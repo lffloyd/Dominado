@@ -139,10 +139,8 @@ class Jogador():
                                              (self.probabilidadeJogada(peca, esq, mesa) if (peca.ehJogavel(esq)) else
                                               self.probabilidadeJogada(peca, dir, mesa))])
             #Distribui uma probabilidade equivalente para cada uma das possíveis escolhas a serem feitas.
-            #probabilidade = 1 / len(possibilidades)
-            for jogada in possibilidades:
-                print("Peça.:"+str(jogada[0]) +",\tPos.:"+ str(jogada[1]) +",\tProb.:"+ str(jogada[2]))
-                #jogada[2] = probabilidade
+            #for jogada in possibilidades:
+            #    print("Peça.:"+str(jogada[0]) +",\tPos.:"+ str(jogada[1]) +",\tProb.:"+ str(jogada[2]))
         return possibilidades
 
     def probabilidadeJogada(self, peca, pos, mesa):

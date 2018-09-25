@@ -58,6 +58,8 @@ class MonteCarloNo:
         else: return
 
     def gerarJogo(self,no,difSimulacao):
+        #print(no.estado)
+        #print(no.estado.ehEstadoFinal())
         if no.estado.ehEstadoFinal():
             if difSimulacao:
                 if no.estado.jogador.jaGanhou():
@@ -66,8 +68,9 @@ class MonteCarloNo:
             self.backPropagation(no,0,1)
             return
         novoEstado=copy.deepcopy(no.estado)
-        novoEstado.jogador.jogarRandom(novoEstado.mesa,novoEstado.oponente)
-        if not novoEstado.jogador.jogouRodada():
+        if novoEstado.jogador.ehSuaVez():
+            novoEstado.jogador.jogarRandom(novoEstado.mesa,novoEstado.oponente)
+        else:
             novoEstado.oponente.jogarRandom(novoEstado.mesa, novoEstado.jogador)
         achouFilho=False
         for filho in no.filhos:

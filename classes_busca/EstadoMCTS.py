@@ -18,9 +18,11 @@ class EstadoMCTS():
         self.ultimaPecaJogada = None
 
     def __str__(self):
-        print(self.jogador)
-        print(self.oponente)
-        print(self.mesa)
+        resp=""
+        resp+=str(self.jogador)+ "\n"
+        resp += str(self.oponente)+ "\n"
+        resp += str(self.mesa)+ "\n"
+        return resp
 
     def comparar(self,estado2):
         for peca in self.jogador.pecas():
@@ -46,4 +48,13 @@ class EstadoMCTS():
         return True
 
     #Indica se um estado terminal foi atingido
-    def ehEstadoFinal(self): return not self.mesa.fechada
+    def ehEstadoFinal(self):
+        print("----Teste no ehEstadoFinal()")
+        print(self)
+        print("Jogador:" + str(self.jogador.jogouRodada()))
+        print("Oponente:" + str(self.oponente.jogouRodada()))
+        print("--------Fim do teste -------\n")
+        if (not self.jogador.jogouRodada() and not self.oponente.jogouRodada() and len(self.mesa.pegaPecasAComprar())==0) \
+                or (len(self.jogador.pecas())==0 or len(self.oponente.pecas())==0) :
+            return True
+        return False

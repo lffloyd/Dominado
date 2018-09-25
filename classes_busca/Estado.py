@@ -1,7 +1,7 @@
 #Define a classe Estado, responsável por descrever o estado global de uma partida num dado momento. Usada para explorar
 #as possibilidades de jogada com os algoritmos de busca Expectiminimax e Monte-Carlo tree search.
 
-#Escrito por: Luiz Felipe, Vítor Costa, Renato Bastos
+#Escrito por: Luiz Felipe, Vítor Costa.
 
 import copy
 import math
@@ -67,6 +67,12 @@ class Estado():
     # possibilidades de ações.
     def alternaTipo(self, tipoEstado): self.tipo = tipoEstado
 
+    #Métodos para cálculo do valor de um estado/nó terminal ou de nós intermediários (nesse caso, utilizando heurísticas).
+    def valorDoEstado(self):
+        fat1 = len(self.oponente.pecas()) - len(self.jogador.pecas())
+        fat2 = (self.oponente.somatorioPecas() if (fat1 > 0) else self.jogador.somatorioPecas())
+        return fat1*fat2
+
     def heuristica1(self):
         fat1 = len(self.oponente.pecas()) - len(self.jogador.pecas())
         fat2 = None
@@ -90,4 +96,5 @@ class Estado():
     # pois o cálculo do valor de utilidade provavelmente será distinto entre eles.
     #Ainda não implementado.
     def utilidade(self):
-        return self.heuristica2()
+        if (self.ehEstadoTerminal()): return self.valorDoEstado()
+        else: return self.heuristica1()

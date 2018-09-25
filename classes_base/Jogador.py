@@ -283,6 +283,7 @@ class Jogador():
                         self.__maoJogaveis = []
                         print("\n" + self.pecasJogaveis(mesa, self.__mao))
                         print(self)
+
                     else:
                         self.setaJogou(False)
                         self.setaVez(False)

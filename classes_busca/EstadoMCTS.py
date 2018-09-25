@@ -24,6 +24,7 @@ class EstadoMCTS():
         resp += str(self.mesa)+ "\n"
         return resp
 
+    #funcao que compara se dois estados são iguais, ou seja, possui as mesmas peças em ambos jogadores e na mesa
     def comparar(self,estado2):
         for peca in self.jogador.pecas():
             achou=False
@@ -32,7 +33,6 @@ class EstadoMCTS():
                     achou=True
                     break
             if achou==False: return False
-
         for peca in self.oponente.pecas():
             igual=False
             for peca2 in estado2.oponente.pecas():

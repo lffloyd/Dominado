@@ -2,11 +2,9 @@
 
 #Escrito por: Vítor Costa, Renato Bastos.
 
-from classes_busca.EstadoMCTS import EstadoMCTS
-#import numpy as np #Substituí as funções do numpy pelas funções normais do Python, pois não consigo instalar o numpy aqui.
-import random
-import math
 import copy
+# import numpy as np #Substituí as funções do numpy pelas funções normais do Python, pois não consigo instalar o numpy aqui.
+import math
 
 
 class MonteCarloNo:
@@ -39,6 +37,7 @@ class MonteCarloNo:
                     novoNo.simular()
                     self.filhos.append(novoNo)
 
+    #funcao para escolher o melhor filho usando o valor do UCT
     def melhorFilho(self):
         for i in self.filhos:
             i.UCT = i.vitorias / i.visitas + 1.4 * math.sqrt(math.log(self.visitas) / i.visitas)
@@ -50,6 +49,7 @@ class MonteCarloNo:
         if(self.estado.jogador.ehSuaVez() == True): return len(self.filhos) == len(self.estado.jogador.pegaPecasJogaveis())
         else: return len(self.filhos) == len(self.estado.oponente.pegaPecasJogaveis())
 
+    #funcao de backpropagation para aumentar o numero de simulacoes e vitorias das simulacoes
     def backPropagation(self, no, vitoria, visita):
         if(no != None):
             no.vitoria =+ vitoria
@@ -57,26 +57,32 @@ class MonteCarloNo:
             self.backPropagation(no.pai, vitoria, visita)
         else: return
 
-    def gerarJogo(self,no,difSimulacao):
+    def gerarJogo(self,no,difSimulacao): #difSimulacao variavel para saber se uma simulacao diferente foi gerada
         #print(no.estado)
         #print(no.estado.ehEstadoFinal())
+
+        #Se o estado e final então o backpropagation sera chamado.
         if no.estado.ehEstadoFinal():
             if difSimulacao:
+                #se ganhou adiciona 1 nas vitorias
                 if no.estado.jogador.jaGanhou():
                     self.backPropagation(no,1,1)
                     return
             self.backPropagation(no,0,1)
             return
         novoEstado=copy.deepcopy(no.estado)
+        #Escolhe o jogador da vez e simula uma jogada
         if novoEstado.jogador.ehSuaVez():
             novoEstado.jogador.jogarRandom(novoEstado.mesa,novoEstado.oponente)
         else:
             novoEstado.oponente.jogarRandom(novoEstado.mesa, novoEstado.jogador)
         achouFilho=False
+        #achou uma outra simulação de jogada que levou pro mesmo no?
         for filho in no.filhos:
             if novoEstado.comparar(filho.estado):
                 achouFilho=True
                 self.gerarJogo(filho,difSimulacao)
+        #se não achou, um novo no filho sera criado e sera chamada a funcao novamente para este novo no
         if achouFilho==False:
             novoNo=MonteCarloNo(novoEstado,no)
             no.filhos.append(novoNo)

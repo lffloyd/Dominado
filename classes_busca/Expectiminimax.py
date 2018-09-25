@@ -6,7 +6,7 @@ from classes_busca.Estado import *
 import copy
 import math
 
-PROFUNDIDADE = 10  # Valor deve ser modificado (ou não), usado por enquanto apenas como placeholder.
+PROFUNDIDADE = 8
 PROBABILIDADE = 2
 
 PECA = 0
@@ -23,11 +23,6 @@ def resultado(estado, acao):
     novoJogador = copy.deepcopy(estado.jogador)
     novoOponente = copy.deepcopy(estado.oponente)
     novoJogador.atualizaPecasJogaveis(novaMesa)
-    #resp = "&&&&&&&&&&&&&resultado(): "
-    #for acao in estado.acoes:
-    #    for ac in acao: resp += (str(ac) + ", ")
-    #print(resp)
-    #print("\n************resultado(): " + str(novoJogador))
     novaMesa.adicionarNaMesa(acao[PECA], acao[POSICAO])
     novoJogador.removePeca(novaMesa, acao[PECA])
     novoJogador.setaJogou(True)
@@ -56,7 +51,8 @@ def expectiminimax(estado, profundidade):
         for acao in estado.acoes: valor = min(valor, expectiminimax(resultado(estado, acao), profundidade-1))
     if (estado.tipo == Estado.CHANCE):
         valor = 0
-        for acao in estado.acoes: valor += (acao[PROBABILIDADE] * expectiminimax(resultado(estado, acao), profundidade-1))
+        for acao in estado.acoes: valor +=\
+            (acao[PROBABILIDADE] * expectiminimax(resultado(estado, acao), profundidade-1))
     return valor
 
 #Decide a melhor jogada a ser executada num dado estado s do jogo pela instância de Jogador que chama esta função.

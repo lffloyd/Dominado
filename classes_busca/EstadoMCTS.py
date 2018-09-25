@@ -2,7 +2,9 @@
 #as possibilidades de jogada com o algoritmo de busca 'Monte-Carlo tree search'. Observar que a classe tem diferenças em
 #relação a classe 'Estado'.
 
-#Escrito por: Vítor Costa.
+#Escrito por: Vítor Costa, Renato Bastos.
+
+import copy
 
 class EstadoMCTS():
     #Construtor de classe. Define atributos associados ao estado global de uma partida.
@@ -15,7 +17,33 @@ class EstadoMCTS():
         self.probabilidade = 0
         self.ultimaPecaJogada = None
 
+    def __str__(self):
+        print(self.jogador)
+        print(self.oponente)
+        print(self.mesa)
+
+    def comparar(self,estado2):
+        for peca in self.jogador.pecas():
+            achou=False
+            for peca2 in estado2.jogador.pecas():
+                if peca.igual(peca2):
+                    achou=True
+                    break
+            if achou==False: return False
+
+        for peca in self.oponente.pecas():
+            igual=False
+            for peca2 in estado2.oponente.pecas():
+                if peca.igual(peca2):
+                    igual=True
+                    break
+            if igual==False: return False
+        onde=0
+        for pecaTab in self.mesa.pegaTabuleiro():
+            pecaTab2=estado2.mesa.pegaTabuleiro()[onde]
+            if not pecaTab.igual(pecaTab2): return False
+            onde+=1
+        return True
+
     #Indica se um estado terminal foi atingido
-    def ehEstadoFinal(self):
-        if (self.jogador.jaGanhou() == True or self.oponente.jaGanhou() == True): return True
-        else: return False
+    def ehEstadoFinal(self): return not self.mesa.fechada

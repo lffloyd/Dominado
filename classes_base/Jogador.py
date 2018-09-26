@@ -290,20 +290,32 @@ class Jogador():
                         oponente.setaVez(True)
                         print("J" + str(self.__ind) + " passou a vez.")
                         return
+
+
                 estadoAtual = EstadoMCTS(self, oponente, mesa)
                 noTeste = MonteCarloNo(estadoAtual)
                 noTeste.expandir()
-                print(noTeste)
-                noTeste.melhorFilho()
-                escolhida = int(input("Qual peça deseja jogar? "))
-                if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
-                else: pos = 0
-                peca = self.__mao.pop(escolhida - 1)
-                adicionou = mesa.adicionarNaMesa(peca, pos)
-                if (not adicionou): self.__mao.append(peca)
+                for i in range(100):
+                    melhorfilho=noTeste.melhorFilho()
+                    noTeste.gerarJogo(melhorfilho,False)
+                    #print("\nMelhor filho:" +str(noTeste.melhorFilho()))
+                    print("Gerou o jogo numero:"+ str(i)+"\n")
+                #print(noTeste)
+                #noTeste.melhorFilho()
+                adicionou=True
+
+                #
+                #escolhida = int(input("Qual peça deseja jogar? "))
+                #if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
+                #else: pos = 0
+                #peca = self.__mao.pop(escolhida - 1)
+                melhorfilho=noTeste.melhorFilho()
+                self.removePeca(mesa,melhorfilho.estado.ultimaPecaJogada)
+                adicionou = mesa.adicionarNaMesa(melhorfilho.estado.ultimaPecaJogada, melhorfilho.estado.onde)
+                if (not adicionou): self.__mao.append(melhorfilho.estado.ultimaPecaJogada)
                 else: self.setaJogou(True)
                 self.__maoJogaveis = []
-                peca.ordem(len(mesa.pegaTabuleiro()))
+                melhorfilho.estado.ultimaPecaJogada.ordem(len(mesa.pegaTabuleiro()))
             self.setaVez(False)
             oponente.setaVez(True)
             return
@@ -314,13 +326,13 @@ class Jogador():
         self.atualizaPecasJogaveis(mesa)
         # Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
         if (len(self.pegaPecasJogaveis()) == 0): self.compraDaMesa(mesa)
-        print("\n" + str(mesa))
-        print("\n" + self.pecasJogaveis(mesa, self.__mao))
-        print(self)
+        #print("\n" + str(mesa))
+        #print("\n" + self.pecasJogaveis(mesa, self.__mao))
+        #print(self)
         if (len(self.pegaPecasJogaveis()) == 0):
             #mesa.fechada = True
             self.setaJogou(False)
-            print("J" + str(self.__ind) + " passou a vez.")
+            #print("J" + str(self.__ind) + " passou a vez.")
         else:
             possibilidades = self.possibilidadesJogaveis(mesa)
             escolhida = random.randint(0, len(possibilidades) - 1)

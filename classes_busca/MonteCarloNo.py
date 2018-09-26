@@ -36,13 +36,22 @@ class MonteCarloNo:
                 if (adicionou):
                     novoNo.simular()
                     self.filhos.append(novoNo)
+                    novoNo.estado.ultimaPecaJogada=peca
+                    onde=i
 
     #funcao para escolher o melhor filho usando o valor do UCT
     def melhorFilho(self):
+        melhor=None
         for i in self.filhos:
             i.UCT = i.vitorias / i.visitas + 1.4 * math.sqrt(math.log(self.visitas) / i.visitas)
-            print(i.UCT)
-        return max(p.UCT for p in self.filhos)
+            if melhor!=None:
+                if i.UCT>melhor.UCT:
+                    melhor=i
+            else:
+                melhor=i
+        print("Melhor filho:" + str(melhor))
+        return melhor
+
 
 
     def foiTotalmenteExpandido(self):
@@ -70,6 +79,7 @@ class MonteCarloNo:
                     return
             self.backPropagation(no,0,1)
             return
+
         novoEstado=copy.deepcopy(no.estado)
         #Escolhe o jogador da vez e simula uma jogada
         if novoEstado.jogador.ehSuaVez():

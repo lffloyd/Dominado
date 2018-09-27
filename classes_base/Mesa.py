@@ -1,4 +1,28 @@
-#Define a Mesa de jogo, uma abstração que representa onde as peças do dominós erão posicionadas e onde estarão
+# MIT License
+#
+# Copyright (c) 2018 Luiz Felipe de Melo (lffloyd), Vítor Costa (vitorhardoim), Renato Bastos (RenatoBastos33)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+##############################################################################################################
+
+
+#Define a Mesa de jogo, que representa onde as peças do dominó serão dispostas e onde estarão
 #disponíveis peças para compra pelos jogadores.
 
 #Escitor por: Vítor Costa, Luiz Felipe.
@@ -55,14 +79,6 @@ class Mesa():
             jogador1.setaVez(True) if (maior1.somatorio() > maior2.somatorio()) else jogador2.setaVez(True)
         else:
             jogador1.setaVez(True) if ((somar1 == False) and (somar2 == True)) else jogador2.setaVez(True)
-
-        #if (jogador1.ehSuaVez()):
-        #    jogador1.vezesQueComecou += 1
-        #elif (jogador2.ehSuaVez()):
-        #    jogador2.vezesQueComecou += 1
-        jogador1.setaJogou(True)
-        jogador2.setaJogou(True)
-
         print("Maior peça de jog. 1: " + str(maior1) + "\tSomar? " + str(somar1))
         print("Maior peça de jog. 2: " + str(maior2) + "\tSomar? " + str(somar2))
         return
@@ -119,7 +135,8 @@ class Mesa():
                     self.__tabuleiro.append(peca)
                     return True
 
-    # Conta a ocorrência de um dado valor entre as peças da mesa (no caso, as peças já encaixadas no tabuleiro).
+    # Conta a ocorrência de um dado valor (como uma das faces de uma peça) entre as peças da mesa (no caso, as peças já
+    #  encaixadas no tabuleiro).
     def contarValor(self, valor):
         cont = 0
         for peca in self.__tabuleiro:

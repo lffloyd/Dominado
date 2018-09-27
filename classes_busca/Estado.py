@@ -1,5 +1,29 @@
+# MIT License
+#
+# Copyright (c) 2018 Luiz Felipe de Melo (lffloyd), Vítor Costa (vitorhardoim), Renato Bastos (RenatoBastos33)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+##############################################################################################################
+
+
 #Define a classe Estado, responsável por descrever o estado global de uma partida num dado momento. Usada para explorar
-#as possibilidades de jogada com os algoritmos de busca Expectiminimax e Monte-Carlo tree search.
+#as possibilidades de jogada com o algoritmo de busca Expectiminimax.
 
 #Escrito por: Luiz Felipe, Vítor Costa.
 
@@ -11,6 +35,7 @@ class Estado():
     MAX = 2 #Indica que o estado/nó atual é de max.
     CHANCE = 1 #Indica que o estado/nó atual é de chance, i.e. armazena a probabilidade de seus filhos ocorrerem.
     MIN = 0 # " " " " " " " min.
+
     # Define o construtor de classe, que define seus atributos internos de acordo com o momento de jogo.
     def __init__(self, jogador, oponente, mesa, tipoEstado=0, tipoAnterior=0):
         #Definição de atributos típicos da classe.
@@ -44,8 +69,7 @@ class Estado():
         possibilidades = []
         probabilidade = 0
         if (len(mesa.pegaTabuleiro()) == 0):
-            for peca in pecasMesa:
-                possibilidades.append([peca, 0, probabilidade])
+            for peca in pecasMesa: possibilidades.append([peca, 0, probabilidade])
         esq, dir = mesa.extremos()
         for peca in pecasMesa:
             if peca.ehJogavel(esq) and peca.ehJogavel(dir):
@@ -94,7 +118,7 @@ class Estado():
 
     #Calcula o valor de utilidade de um nó. Deve-se diferenciar um nó terminal (i.e. que finaliza a partida) e um nó interno
     # pois o cálculo do valor de utilidade provavelmente será distinto entre eles.
-    #Ainda não implementado.
+    #Encontramos problemas com a função heurística e o valor de utilidade (dificuldade em criar uma boa heurística).
     def utilidade(self):
         if (self.ehEstadoTerminal()): return self.valorDoEstado()
         else: return self.heuristica1()

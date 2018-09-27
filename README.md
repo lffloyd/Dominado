@@ -1,4 +1,4 @@
-# TrabalhoIA1_Domino ("Dominado")
+# TrabalhoIA1_Domino ("Dominado v 0.01")
 IA utilizando estratégias de busca ("Expectiminimax" e "Monte-Carlo tree search") para jogar dominó com dois jogadores
 
 ## Procedimentos

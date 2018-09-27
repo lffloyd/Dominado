@@ -317,7 +317,7 @@ class Jogador():
                 for i in range(100):
                     melhorfilho=noTeste.melhorFilho()
                     noTeste.gerarJogo(melhorfilho,False)
-            melhorfilho=noTeste.melhorFilho()
+            melhorfilho=noTeste.escolheMelhor()
             print(str(melhorfilho.UCT))
             self.removePeca(mesa,melhorfilho.estado.ultimaPecaJogada)
             mesa.adicionarNaMesa(melhorfilho.estado.ultimaPecaJogada, melhorfilho.estado.onde)

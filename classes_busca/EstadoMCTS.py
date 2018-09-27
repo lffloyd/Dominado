@@ -16,7 +16,6 @@ class EstadoMCTS():
         self.qtdPecasOponente = len(self.oponente.pecas())
         self.probabilidade = 0
         self.ultimaPecaJogada = None
-        self.onde=None
 
     def __str__(self):
         resp=""
@@ -30,31 +29,31 @@ class EstadoMCTS():
         for peca in self.jogador.pecas():
             achou=False
             for peca2 in estado2.jogador.pecas():
-                if peca==peca2:
+                if peca.igual(peca2):
                     achou=True
                     break
             if achou==False: return False
         for peca in self.oponente.pecas():
             igual=False
             for peca2 in estado2.oponente.pecas():
-                if peca==peca2:
+                if peca.igual(peca2):
                     igual=True
                     break
             if igual==False: return False
         onde=0
         for pecaTab in self.mesa.pegaTabuleiro():
             pecaTab2=estado2.mesa.pegaTabuleiro()[onde]
-            if not pecaTab==pecaTab2: return False
+            if not pecaTab.igual(pecaTab2): return False
             onde+=1
         return True
 
     #Indica se um estado terminal foi atingido
     def ehEstadoFinal(self):
-        #print("----Teste no ehEstadoFinal()")
-        #print(self)
-        #print("Jogador:" + str(self.jogador.jogouRodada()))
-        #print("Oponente:" + str(self.oponente.jogouRodada()))
-        #print("--------Fim do teste -------\n")
+        print("----Teste no ehEstadoFinal()")
+        print(self)
+        print("Jogador:" + str(self.jogador.jogouRodada()))
+        print("Oponente:" + str(self.oponente.jogouRodada()))
+        print("--------Fim do teste -------\n")
         if (not self.jogador.jogouRodada() and not self.oponente.jogouRodada() and len(self.mesa.pegaPecasAComprar())==0) \
                 or (len(self.jogador.pecas())==0 or len(self.oponente.pecas())==0) :
             return True

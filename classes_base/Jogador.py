@@ -3,6 +3,7 @@
 #Escrito por: Luiz Felipe, Vítor Costa, Renato Bastos.
 
 import random
+import os
 from classes_base.Cor import *
 from classes_base.Peca import *
 from classes_busca.Expectiminimax import *
@@ -33,6 +34,8 @@ class Jogador():
         elif (self.tipo == self.EXPECTMM): self.tipoStr = "EXPMM"
         elif (self.tipo == self.MCTS): self.tipoStr = "MCTS"
         else: self.tipoStr = "RANDOM"
+
+        self.vezesQueComecou = 0
 
     def __str__(self):
         resp = "J" + str(self.__ind) + " ("+ self.tipoStr + ") -"
@@ -144,6 +147,7 @@ class Jogador():
         return possibilidades
 
     def probabilidadeJogada(self, peca, pos, mesa):
+        if (self.tipo == self.RANDOM): return 0
         contagemMax = 7
         contagem = 1
         probMax = 1
@@ -272,63 +276,49 @@ class Jogador():
     def jogarMCTS(self, mesa, oponente):
         if self.__vezAtual == False: return
         else:
-            print("\n" + self.pecasJogaveis(mesa, self.__mao))
-            print(self)
-            print("\n" + str(mesa))
-            while (len(self.__maoJogaveis) == 0):
-                if (len(mesa.pegaPecasAComprar()) != 0):
-                    self.adicionaPeca(mesa.comprarPeca())
-                    self.__maoJogaveis = []
-                    print("\n" + self.pecasJogaveis(mesa, self.__mao))
-                    print(self)
-
-                else:
-                    self.setaJogou(False)
-                    self.setaVez(False)
-                    oponente.setaVez(True)
-                    print("J" + str(self.__ind) + " passou a vez.")
-                    return
-            estadoAtual = EstadoMCTS(self, oponente, mesa)
-            noTeste = MonteCarloNo(estadoAtual)
-            noTeste.expandir()
-            if len(noTeste.filhos)>1:
-                for i in range(100):
-                    melhorfilho=noTeste.melhorFilho()
-                    noTeste.gerarJogo(melhorfilho,False)
-                #print("\nMelhor filho:" +str(noTeste.melhorFilho()))
-                #print("Gerou o jogo numero:"+ str(i)+"\n")
-            #print(noTeste)
-            #noTeste.melhorFilho()
-            #adicionou=True
-            #escolhida = int(input("Qual peça deseja jogar? "))
-            #if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
-            #else: pos = 0
-            #peca = self.__mao.pop(escolhida - 1)
-
-            melhorfilho=noTeste.melhorFilho()
-            print(str(melhorfilho.UCT))
-            #print("Vitorias:"+str(melhorfilho.vitorias)+"Jogadas"+str(melhorfilho.visitas))
-            self.removePeca(mesa,melhorfilho.estado.ultimaPecaJogada)
-            adicionou = mesa.adicionarNaMesa(melhorfilho.estado.ultimaPecaJogada, melhorfilho.estado.onde)
-            self.setaJogou(True)
-            self.__maoJogaveis = []
-            melhorfilho.estado.ultimaPecaJogada.ordem(len(mesa.pegaTabuleiro()))
-            print("MCTS jogou a peça:"+ str(melhorfilho.estado.ultimaPecaJogada)+"na posição :"+ str(melhorfilho.estado.onde)+"\n" )
-        self.setaVez(False)
-        oponente.setaVez(True)
-        return
+            adicionou = False
+            while not adicionou:
+                print("\n" + self.pecasJogaveis(mesa, self.__mao))
+                print(self)
+                print("\n" + str(mesa))
+                while (len(self.__maoJogaveis) == 0):
+                    if (len(mesa.pegaPecasAComprar()) != 0):
+                        self.adicionaPeca(mesa.comprarPeca())
+                        self.__maoJogaveis = []
+                        print("\n" + self.pecasJogaveis(mesa, self.__mao))
+                        print(self)
+                    else:
+                        self.setaJogou(False)
+                        self.setaVez(False)
+                        oponente.setaVez(True)
+                        print("J" + str(self.__ind) + " passou a vez.")
+                        return
+                estadoAtual = EstadoMCTS(self, oponente, mesa)
+                noTeste = MonteCarloNo(estadoAtual)
+                noTeste.expandir()
+                print(noTeste)
+                noTeste.melhorFilho()
+                escolhida = int(input("Qual peça deseja jogar? "))
+                if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
+                else: pos = 0
+                peca = self.__mao.pop(escolhida - 1)
+                adicionou = mesa.adicionarNaMesa(peca, pos)
+                if (not adicionou): self.__mao.append(peca)
+                else: self.setaJogou(True)
+                self.__maoJogaveis = []
+                peca.ordem(len(mesa.pegaTabuleiro()))
+            self.setaVez(False)
+            oponente.setaVez(True)
+            return
 
     # Define o método 'jogar' para um jogador 'random', usado para testes.
     def jogarRandom(self, mesa, oponente):
-        if self.__vezAtual == False: return
+        if (self.__vezAtual == False): return
         self.atualizaPecasJogaveis(mesa)
         # Caso não existam peças jogáveis em sua mão, executa a compra de peças enquanto for possível.
-        if (len(self.pegaPecasJogaveis()) == 0): self.compraDaMesa(mesa)
-        #print("\n" + str(mesa))
-        #print("\n" + self.pecasJogaveis(mesa, self.__mao))
-        #print(self)
         if (len(self.pegaPecasJogaveis()) == 0):
-            #mesa.fechada = True
+            if (len(self.__mao) != 0): self.compraDaMesa(mesa)
+        if (len(self.pegaPecasJogaveis()) == 0):
             self.setaJogou(False)
             #print("J" + str(self.__ind) + " passou a vez.")
         else:
@@ -337,7 +327,7 @@ class Jogador():
             peca = possibilidades[escolhida][0]
             pos = possibilidades[escolhida][1]
             self.removePeca(mesa, peca)
-            adicionou = mesa.adicionarNaMesa(peca, pos)
+            mesa.adicionarNaMesa(peca, pos)
             self.setaJogou(True)
             peca.ordem(len(mesa.pegaTabuleiro()))
         self.setaVez(False)

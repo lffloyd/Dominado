@@ -55,6 +55,14 @@ class Mesa():
             jogador1.setaVez(True) if (maior1.somatorio() > maior2.somatorio()) else jogador2.setaVez(True)
         else:
             jogador1.setaVez(True) if ((somar1 == False) and (somar2 == True)) else jogador2.setaVez(True)
+
+        #if (jogador1.ehSuaVez()):
+        #    jogador1.vezesQueComecou += 1
+        #elif (jogador2.ehSuaVez()):
+        #    jogador2.vezesQueComecou += 1
+        jogador1.setaJogou(True)
+        jogador2.setaJogou(True)
+
         print("Maior peça de jog. 1: " + str(maior1) + "\tSomar? " + str(somar1))
         print("Maior peça de jog. 2: " + str(maior2) + "\tSomar? " + str(somar2))
         return

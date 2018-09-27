@@ -40,7 +40,6 @@ class MonteCarloNo:
                     self.filhos.append(novoNo)
 
 
-
     #funcao para escolher o melhor filho usando o valor do UCT
     def melhorFilho(self):
         melhor=None

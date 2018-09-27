@@ -31,7 +31,7 @@ class Jogador():
         self.tipoStr = None
         if (self.tipo == self.HUMANO): self.tipoStr = "HUMANO"
         elif (self.tipo == self.EXPECTMM): self.tipoStr = "EXPMM"
-        elif (self.tipo == self.EXPECTMM): self.tipoStr = "MCTS"
+        elif (self.tipo == self.MCTS): self.tipoStr = "MCTS"
         else: self.tipoStr = "RANDOM"
 
     def __str__(self):

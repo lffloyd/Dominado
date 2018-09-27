@@ -11,38 +11,46 @@ def limpaTela(sistema): os.system("cls" if (sistema == "nt") else "clear")
 
 sistema = os.name
 
+
 def gameLoop(mesa, jogador1, jogador2):
+    empatou = 0
     n = int(input("Repetições do cenário: "))
     if (n <= 0): return
     for i in range(n):
         mesa.comecarJogo(jogador1, jogador2)
-        #Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
-        #jogadores não estejam conseguindo jogar no momento.
-        while (True):
+        # Loop de jogo. É abortado caso um dos jogadores tenha vencido o jogo ou caso o jogo tenha "travado", i.e. caso ambos os
+        # jogadores não estejam conseguindo jogar no momento.
+        while ((not jogador1.jaGanhou()) and (not jogador2.jaGanhou())):
             # limpaTela(sistema)
-            jogador1.jogar(mesa, jogador2)
-            if len(jogador1.pecas()) == 0 : break
+            aleatorio = random.randint(0,1)
+            if(aleatorio == 0):
+                jogador1.jogar(mesa, jogador2)
+                if len(jogador1.pecas()) == 0: break
+                jogador2.jogar(mesa, jogador1)
+                if len(jogador2.pecas()) == 0: break
+            else:
+                jogador2.jogar(mesa, jogador1)
+                if len(jogador2.pecas()) == 0: break
+                jogador1.jogar(mesa, jogador2)
+                if len(jogador1.pecas()) == 0: break
             if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())): break
-            jogador2.jogar(mesa, jogador1)
-            if len(jogador2.pecas()) == 0: break
-            if ((not jogador1.jogouRodada()) and (not jogador2.jogouRodada())): break
-        #Atualização da pontuação do jogador vencedor.
-        if jogador1.somatorioPecas()>jogador2.somatorioPecas():
-            jogador1.somaPontos(jogador1.somatorioPecas())
-            jogador1.vitorias=jogador1.vitorias +1
-            print("\n\n\nJ1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
-        elif jogador1.somatorioPecas()<jogador2.somatorioPecas():
-            jogador2.somaPontos(jogador2.somatorioPecas())
+        # Atualização da pontuação do jogador vencedor.
+        if jogador1.somatorioPecas() > jogador2.somatorioPecas():
+            jogador2.somaPontos(jogador1.somatorioPecas())
             jogador2.vitorias = jogador2.vitorias + 1
             print("\n\n\nJ2 venceu: " + str(jogador2.pegaPontos()) + "pts.")
-        #else:
-         #   jogador1.vitorias=jogador1.vitorias +1
-          #  jogador2.vitorias = jogador2.vitorias + 1
+        elif jogador1.somatorioPecas() < jogador2.somatorioPecas():
+            jogador1.somaPontos(jogador2.somatorioPecas())
+            jogador1.vitorias = jogador1.vitorias + 1
+            print("\n\n\nJ1 venceu: " + str(jogador1.pegaPontos()) + "pts.")
+        elif jogador1.somatorioPecas() == jogador2.somatorioPecas():
+            empatou += 1
 
-    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador1.vitorias/n)*100) +
+    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador1.vitorias / n) * 100) +
           "%,\tPts. totais: " + str(jogador1.pegaPontos()))
-    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador2.vitorias/n)*100) +
+    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador2.vitorias / n) * 100) +
           "%,\tPts. totais: " + str(jogador2.pegaPontos()))
+    print("J1 e J2 empataram: " + str(empatou) + " vezes" + ",\tPorcent.: " + str((empatou / (jogador1.vitorias+jogador2.vitorias)) * 100))
 
 
 #Menu inicial do jogo.

@@ -5,12 +5,12 @@
 from classes_base.Mesa import *
 from classes_base.Jogador import *
 import os
+import random
 
 #Limpa a tela de um prompt de comando. Usado para facilitar a visualização do jogo caso executado em um shell ou cmd.exe.
 def limpaTela(sistema): os.system("cls" if (sistema == "nt") else "clear")
 
 sistema = os.name
-
 
 def gameLoop(mesa, jogador1, jogador2):
     empatou = 0
@@ -46,11 +46,10 @@ def gameLoop(mesa, jogador1, jogador2):
         elif jogador1.somatorioPecas() == jogador2.somatorioPecas():
             empatou += 1
 
-    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador1.vitorias / n) * 100) +
-          "%,\tPts. totais: " + str(jogador1.pegaPontos()))
-    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador2.vitorias / n) * 100) +
-          "%,\tPts. totais: " + str(jogador2.pegaPontos()))
-    print("J1 e J2 empataram: " + str(empatou) + " vezes" + ",\tPorcent.: " + str((empatou / (jogador1.vitorias+jogador2.vitorias)) * 100))
+    print("J1 venceu: " + str(jogador1.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador1.vitorias/n)*100) +
+          "%,\tPts. totais: " + str(jogador1.pegaPontos()) + ",\tComeçou: " + str(jogador1.vezesQueComecou) + "/" + str(n))
+    print("J2 venceu: " + str(jogador2.vitorias) + "/" + str(n) + ",\tPorcent.: " + str((jogador2.vitorias/n)*100) +
+          "%,\tPts. totais: " + str(jogador2.pegaPontos()) + ",\tComeçou: " + str(jogador2.vezesQueComecou) + "/" + str(n))
 
 
 #Menu inicial do jogo.
@@ -67,9 +66,9 @@ def escolherModoDeJogo():
     print("0. Random vs. Random")
     print("1. Random vs. Expectiminimax")
     print("2. Random vs. MCTS")
-    print("3. Humano vs. Expectiminimax")
-    print("4. Humano vs. MCTS")
-    print("5. MCTS vs. Expectiminimax")
+    #print("3. Humano vs. Expectiminimax")
+    #print("4. Humano vs. MCTS")
+    #print("5. MCTS vs. Expectiminimax")
     escolha = int(input())
     jogador1 = None
     jogador2 = None
@@ -80,17 +79,18 @@ def escolherModoDeJogo():
     if (escolha > 0) and (escolha < 3):
         jogador1 = Jogador(1, Jogador.RANDOM)
         jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 1) else Jogador(2, Jogador.MCTS))
-    if (escolha > 2) and (escolha < 5):
-        jogador1 = Jogador(1, Jogador.HUMANO)
-        jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 3) else Jogador(2, Jogador.MCTS))
-    if (escolha == 5):
-        jogador1 = Jogador(1, Jogador.MCTS)
-        jogador2 = Jogador(2, Jogador.EXPECTMM)
+    #if (escolha > 2) and (escolha < 5):
+    #    jogador1 = Jogador(1, Jogador.HUMANO)
+    #    jogador2 = (Jogador(2, Jogador.EXPECTMM) if (escolha == 3) else Jogador(2, Jogador.MCTS))
+    #if (escolha == 5):
+    #    jogador1 = Jogador(1, Jogador.MCTS)
+    #    jogador2 = Jogador(2, Jogador.EXPECTMM)
     print("\n")
     mesa = Mesa(28)
     gameLoop(mesa, jogador1, jogador2)
     escolha = input("Jogar novamente? S|N")
-    if (escolha == "S") or (escolha == "s"): escolherModoDeJogo()
+    if (escolha == "S") or (escolha == "s"):
+        escolherModoDeJogo()
     else: return
 
 menu()

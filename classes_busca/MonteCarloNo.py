@@ -25,7 +25,7 @@ class MonteCarloNo:
         return "\nQtd de Filhos:" + str(len(self.filhos))
 
     def expandir(self):
-        print("AQUIII" + str(len(self.estado.jogador.pegaPecasJogaveis())))
+        #print("AQUIII" + str(len(self.estado.jogador.pegaPecasJogaveis())))
         for peca in self.estado.jogador.pegaPecasJogaveis():
             for i in range(0,2):
                 novoEstado = copy.deepcopy(self.estado)
@@ -35,21 +35,23 @@ class MonteCarloNo:
                 novoEstado.oponente.setaVez(True)
                 if (adicionou):
                     novoNo.simular()
+                    novoNo.estado.onde = i
+                    novoNo.estado.ultimaPecaJogada = peca
                     self.filhos.append(novoNo)
-                    novoNo.estado.ultimaPecaJogada=peca
-                    onde=i
+
+
 
     #funcao para escolher o melhor filho usando o valor do UCT
     def melhorFilho(self):
         melhor=None
         for i in self.filhos:
-            i.UCT = i.vitorias / i.visitas + 1.4 * math.sqrt(math.log(self.visitas) / i.visitas)
+            i.UCT = (i.vitorias / i.visitas) + (1.4 * (math.sqrt(math.log(self.visitas) / i.visitas)))
             if melhor!=None:
                 if i.UCT>melhor.UCT:
                     melhor=i
             else:
                 melhor=i
-        print("Melhor filho:" + str(melhor))
+        #print("Melhor filho:" + str(melhor))
         return melhor
 
 
@@ -61,8 +63,8 @@ class MonteCarloNo:
     #funcao de backpropagation para aumentar o numero de simulacoes e vitorias das simulacoes
     def backPropagation(self, no, vitoria, visita):
         if(no != None):
-            no.vitoria =+ vitoria
-            no.visita =+ visita
+            no.vitorias += vitoria
+            no.visitas += visita
             self.backPropagation(no.pai, vitoria, visita)
         else: return
 

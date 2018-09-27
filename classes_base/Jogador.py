@@ -272,53 +272,51 @@ class Jogador():
     def jogarMCTS(self, mesa, oponente):
         if self.__vezAtual == False: return
         else:
-            adicionou = False
-            while not adicionou:
-                print("\n" + self.pecasJogaveis(mesa, self.__mao))
-                print(self)
-                print("\n" + str(mesa))
-                while (len(self.__maoJogaveis) == 0):
-                    if (len(mesa.pegaPecasAComprar()) != 0):
-                        self.adicionaPeca(mesa.comprarPeca())
-                        self.__maoJogaveis = []
-                        print("\n" + self.pecasJogaveis(mesa, self.__mao))
-                        print(self)
+            print("\n" + self.pecasJogaveis(mesa, self.__mao))
+            print(self)
+            print("\n" + str(mesa))
+            while (len(self.__maoJogaveis) == 0):
+                if (len(mesa.pegaPecasAComprar()) != 0):
+                    self.adicionaPeca(mesa.comprarPeca())
+                    self.__maoJogaveis = []
+                    print("\n" + self.pecasJogaveis(mesa, self.__mao))
+                    print(self)
 
-                    else:
-                        self.setaJogou(False)
-                        self.setaVez(False)
-                        oponente.setaVez(True)
-                        print("J" + str(self.__ind) + " passou a vez.")
-                        return
-
-
-                estadoAtual = EstadoMCTS(self, oponente, mesa)
-                noTeste = MonteCarloNo(estadoAtual)
-                noTeste.expandir()
+                else:
+                    self.setaJogou(False)
+                    self.setaVez(False)
+                    oponente.setaVez(True)
+                    print("J" + str(self.__ind) + " passou a vez.")
+                    return
+            estadoAtual = EstadoMCTS(self, oponente, mesa)
+            noTeste = MonteCarloNo(estadoAtual)
+            noTeste.expandir()
+            if len(noTeste.filhos)>1:
                 for i in range(100):
                     melhorfilho=noTeste.melhorFilho()
                     noTeste.gerarJogo(melhorfilho,False)
-                    #print("\nMelhor filho:" +str(noTeste.melhorFilho()))
-                    print("Gerou o jogo numero:"+ str(i)+"\n")
-                #print(noTeste)
-                #noTeste.melhorFilho()
-                adicionou=True
+                #print("\nMelhor filho:" +str(noTeste.melhorFilho()))
+                #print("Gerou o jogo numero:"+ str(i)+"\n")
+            #print(noTeste)
+            #noTeste.melhorFilho()
+            #adicionou=True
+            #escolhida = int(input("Qual peça deseja jogar? "))
+            #if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
+            #else: pos = 0
+            #peca = self.__mao.pop(escolhida - 1)
 
-                #
-                #escolhida = int(input("Qual peça deseja jogar? "))
-                #if (len(mesa.pegaTabuleiro()) != 0): pos = int(input("Em que posição?(0 p/ esquerda, 1 p/ direita) "))
-                #else: pos = 0
-                #peca = self.__mao.pop(escolhida - 1)
-                melhorfilho=noTeste.melhorFilho()
-                self.removePeca(mesa,melhorfilho.estado.ultimaPecaJogada)
-                adicionou = mesa.adicionarNaMesa(melhorfilho.estado.ultimaPecaJogada, melhorfilho.estado.onde)
-                if (not adicionou): self.__mao.append(melhorfilho.estado.ultimaPecaJogada)
-                else: self.setaJogou(True)
-                self.__maoJogaveis = []
-                melhorfilho.estado.ultimaPecaJogada.ordem(len(mesa.pegaTabuleiro()))
-            self.setaVez(False)
-            oponente.setaVez(True)
-            return
+            melhorfilho=noTeste.melhorFilho()
+            print(str(melhorfilho.UCT))
+            #print("Vitorias:"+str(melhorfilho.vitorias)+"Jogadas"+str(melhorfilho.visitas))
+            self.removePeca(mesa,melhorfilho.estado.ultimaPecaJogada)
+            adicionou = mesa.adicionarNaMesa(melhorfilho.estado.ultimaPecaJogada, melhorfilho.estado.onde)
+            self.setaJogou(True)
+            self.__maoJogaveis = []
+            melhorfilho.estado.ultimaPecaJogada.ordem(len(mesa.pegaTabuleiro()))
+            print("MCTS jogou a peça:"+ str(melhorfilho.estado.ultimaPecaJogada)+"na posição :"+ str(melhorfilho.estado.onde)+"\n" )
+        self.setaVez(False)
+        oponente.setaVez(True)
+        return
 
     # Define o método 'jogar' para um jogador 'random', usado para testes.
     def jogarRandom(self, mesa, oponente):

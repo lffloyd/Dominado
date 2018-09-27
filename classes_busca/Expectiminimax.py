@@ -12,6 +12,11 @@ PROBABILIDADE = 2
 PECA = 0
 POSICAO = 1
 
+###########
+escolhe_cont = 0
+expmm_cont = 0
+###########
+
 # Retorna o resultado da execução de uma dada ação (i.e. inserção de peça) num dado estado (i.e. mesa/tabuleiro). Ou
 # seja, retorna o estado resultado da ação/jogada tomada.
 def resultado(estado, acao):
@@ -61,9 +66,20 @@ def escolheJogada(estado):
     acoes = estado.acoes
     melhorAcao = None
     valor = -math.inf
+    i = 0
+    #for acao in acoes:
+    #    print("Ação " + str(i) + ": " + pegaAcao(acao))
+    #    i += 1
     for acao in acoes:
+        print("Ação " + str(i) + ": " + pegaAcao(acao))
+        i += 1
         novoValor = expectiminimax(estado, PROFUNDIDADE)
         if (novoValor > valor):
             valor = novoValor
             melhorAcao = acao
+    print("MELHOR: " + pegaAcao(melhorAcao))
     return melhorAcao
+
+def pegaAcao(acao):
+    if acao == None: return str(acao)
+    return str("\tPeça: " + str(acao[0]) + "\tPos.: " + str(acao[1]) + "\tProb.: " + str(acao[2]))

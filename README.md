@@ -1,5 +1,5 @@
 # Dominado
-IA utilizando estratégias de busca ("Expectiminimax" e "Monte-Carlo tree search") para jogar dominó com dois jogadores
+I.A. utilizando estratégias de busca ("Expectiminimax" e "Monte-Carlo tree search") para jogar dominó com dois jogadores
 
 ## Procedimentos
 

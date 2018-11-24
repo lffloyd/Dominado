@@ -1,4 +1,4 @@
-# TrabalhoIA1_Domino ("Dominado v 0.01")
+# Dominado
 IA utilizando estratégias de busca ("Expectiminimax" e "Monte-Carlo tree search") para jogar dominó com dois jogadores
 
 ## Procedimentos
@@ -51,9 +51,9 @@ Aqui deve-se digitar um valor inteiro indicando o número de simulações. Por e
 * **Vítor Costa** - *Implementação básica do jogo e métodos de busca/I.A.* - [vitorhardoim](https://github.com/vitorhardoim)
 * **Renato Bastos** - *Implementação de métodos de busca/I.A.* - [RenatoBastos33](https://github.com/RenatoBastos33)
 
-Veja a lista de [contribuidores](https://github.com/lffloyd/TrabalhoIA1_Domino/contributors) participantes no projeto.
+Veja a lista de [contribuidores](https://github.com/lffloyd/Dominado/contributors) participantes no projeto.
 
 ## Licença
 
-Projeto licenciado sob a licença MIT - leia [LICENSE.md](https://github.com/lffloyd/TrabalhoIA1_Domino/blob/rev0.1/LICENSE) para maiores detalhes.
+Projeto licenciado sob a licença MIT - leia [LICENSE.md](https://github.com/lffloyd/Dominado/blob/rev0.1/LICENSE) para maiores detalhes.
 
